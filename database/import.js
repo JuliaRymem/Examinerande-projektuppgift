@@ -5,7 +5,7 @@ const db = require("./database");
 
 // read the file as a raw text string
 // parse the JSOn string into a JavaScript object
-const rawData = fs.readFileSync("menu.json");
+const rawData = fs.readFileSync("./database/menu.json");
 const menuData = JSON.parse(rawData).menu;  
 
 // Prepare an SQL INSERT statement
@@ -20,4 +20,4 @@ db.transaction(() => {
   })();
 
   //// Log confirmation message
-  console.log("Data har importerats till databasen.");
+  console.log(" 📥 Data har importerats till databasen.");

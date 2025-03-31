@@ -1,15 +1,14 @@
 // 
 const express = require("express");
 const cors = require("cors"); //
-const db = require("./db");
-
+const db = require("./database/database");  // 
 //
 const app = express();
-app.use(cors()); //
+app.use(cors()); //gi
 app.use(express.json()); //
 
 // Fetching the menu
-app.get("./menu", (req, res) => {
+app.get("/menu", (req, res) => {
     const menu = db.prepare("SELECT * FROM menu").all(); // Using a prepared statement
     res.json(menu);
 });
@@ -25,7 +24,7 @@ app.get("/menu/:id", (req, res) => {
 });
 
 // Add a new product
-app.post("/menu/:id", (req, res) => {
+app.post("/menu", (req, res) => {
     const {title, desc, price } = req.body;
     const stmt = db.prepare("INSERT INTO menu (title, desc, price) VALUES (?, ?, ?)");
     const result = stmt.run(title, desc, price);
@@ -45,7 +44,7 @@ app.put("/menu/:id", (req, res) => {
     });
 
 // Delete a product
-app.delete("./menu/:id", (req, res) => {
+app.delete("/menu/:id", (req, res) => {
     const stmt = db.prepare("DELETE FROM menu WHERE id = ?");
     const result = stmt.run(req.params.id);
     if (result.changes) {
@@ -58,5 +57,5 @@ app.delete("./menu/:id", (req, res) => {
 // Running on port...
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Servern körs på http//localhost:${PORT}`);
+    console.log(` 🟢 Servern körs på http//localhost:${PORT}`);
 });

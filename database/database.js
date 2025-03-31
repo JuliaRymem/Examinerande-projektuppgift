@@ -1,11 +1,9 @@
 // Import better-sqlite3 library to interact with SQlite database
 // create a new database connection
-const Database = require(better-sqlite3);
-const db = new Database(menu.db, { verbose: console.log });
-const campaignsDb = new nedb({
-    filename: 'databases/campaigns.db',
-    autoload: true
-  });
+const Database = require("better-sqlite3");
+const path = require("path");
+
+  const db = new Database(path.join(__dirname, "menu.db"), { verbose: console.log});
   
 // Creates an SQL-TABLE
 db.exec(`
