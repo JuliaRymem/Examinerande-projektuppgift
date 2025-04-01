@@ -1,5 +1,7 @@
 # Airbean API
 
+## Svenska (SCROLL DOWN FOR INSTRUCTIONS IN ENGLISH)
+
 ## Beskrivning
 Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att hantera en meny med kaffedrycker. API:et möjliggör CRUD-operationer (Create, Read, Update, Delete) samt "soft delete"-funktionalitet.
 
@@ -148,4 +150,161 @@ Nu kan du använda API:et via `http://localhost:3000/`
 - **GitHub**: [Tobias-Thor](https://github.com/Tobias-Thor)
 - **LinkedIn**: [Tobias Thor](https://www.linkedin.com/in/tobias-thor-810215182/)
 - **E-post**: [tobiasthor@protonmail.com](mailto:tobiasthor@protonmail.com)
+
+---
+
+# Airbean API 
+
+## English (SCROLL UP FOR INSTRUCTIONS IN SWEDISH)
+
+## Description
+Airbean API is a REST API built with Express.js and better-sqlite3 to manage a menu of coffee beverages. The API enables CRUD operations (Create, Read, Update, Delete) as well as "soft delete" functionality.
+
+---
+
+## Features
+- Retrieve the entire menu
+- Retrieve a specific product
+- Add a new product
+- Update an existing product
+- Delete a product (soft delete)
+- Restore a deleted product
+
+---
+
+## Technologies
+- **Node.js** (Backend runtime)
+- **Express.js** (Web framework)
+- **better-sqlite3** (Database management)
+- **cors** (Cross-Origin Resource Sharing)
+- **nodemon** (Development tool)
+
+---
+
+## System Requirements
+Before you begin, make sure you have the following installed:
+- [Node.js](https://nodejs.org/) (version 16 or later recommended)
+- npm (included with Node.js)
+- A modern web browser
+
+---
+
+## Installation & Usage
+
+### 1. Clone this repository:
+```sh
+   git clone https://github.com/Tobias-Thor/Airbean-API.git
+```
+
+### 2. Navigate to the project folder:
+```sh
+   cd Airbean-API
+```
+
+### 3. Install dependencies:
+```sh
+   npm install
+```
+
+### 4. Start the development server:
+```sh
+   npm start  # or use npm run dev for nodemon
+```
+
+Now you can use the API via `http://localhost:3000/`
+
+---
+
+## API Endpoints
+
+### Retrieve the entire menu
+**GET** `/menu`
+
+**Response Example:**
+```json
+[
+  {
+    "id": 1,
+    "title": "Drip Coffee",
+    "desc": "Brewed with this month's beans.",
+    "price": 39
+  }
+]
+```
+
+---
+
+### Retrieve a specific product
+**GET** `/menu/:id`
+
+**Response Example:**
+```json
+{
+  "id": 1,
+  "title": "Drip Coffee",
+  "desc": "Brewed with this month's beans.",
+  "price": 39
+}
+```
+
+---
+
+### Add a new product
+**POST** `/menu`
+
+**Body (JSON):**
+```json
+{
+  "title": "Espresso",
+  "desc": "A strong and rich espresso.",
+  "price": 45
+}
+```
+
+---
+
+### Update a product
+**PUT** `/menu/:id`
+
+**Body (JSON):**
+```json
+{
+  "title": "Updated Name",
+  "desc": "New description",
+  "price": 50
+}
+```
+
+---
+
+### Delete a product (soft delete)
+**DELETE** `/menu/:id`
+
+**Response Example:**
+```json
+{
+  "message": "Product with ID 1 has been marked as deleted."
+}
+```
+
+---
+
+### Restore a deleted product
+**PUT** `/menu/restore/:id`
+
+**Response Example:**
+```json
+{
+  "message": "Product with ID 1 has been restored."
+}
+```
+
+---
+
+## Contact
+- **GitHub**: [Tobias-Thor](https://github.com/Tobias-Thor)
+- **LinkedIn**: [Tobias Thor](https://www.linkedin.com/in/tobias-thor-810215182/)
+- **Email**: [tobiasthor@protonmail.com](mailto:tobiasthor@protonmail.com)
+
+
 
