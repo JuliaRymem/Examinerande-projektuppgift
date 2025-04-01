@@ -3,10 +3,12 @@
 const express = require("express");
 const cors = require("cors");
 const db = require("./database/database");  
+const menuRoutes = require("./routes/menuRoutes");
 
 const app = express();
 app.use(cors()); // Enables Cross-Origin Resource Sharing (CORS) to allow API access from different domains
 app.use(express.json()); // Middleware to parse incoming JSON requests
+app.use("/menu", menuRoutes);
 
 // Helper function to fetch a product by its ID from the database
 const getProductById = (id) => db.prepare("SELECT * FROM menu WHERE id = ?").get(id);

@@ -17,4 +17,7 @@ router.put("/:id", menuController.updateMenuItem);
 // Delete a menu item
 router.delete("/:id", menuController.deleteMenuItem);
 
+// Restore a product
+router.put("/restore/:id", menuController.restoreMenuItem);
+
 module.exports = router;

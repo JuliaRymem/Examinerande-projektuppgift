@@ -2,7 +2,7 @@ const fs = require("fs"); // Import the built-in file system (fs) module to read
 const db = require("./database"); // Import the database module (using better-sqlite3)
 
 try {
-  const rawData = fs.readFileSync("./database/menu.json"); // Read the menu data from the JSON file as a raw string
+  const rawData = fs.readFileSync("./menu.json"); // Read the menu data from the JSON file as a raw string
   const menuData = JSON.parse(rawData).menu; // Parse the raw JSON string into a JavaScript object and extract the 'menu' array
 
 // Prepare an SQL INSERT statement for inserting menu items (prepaed statements helps to prvent SQL-injections)

@@ -1,75 +1,97 @@
-// Import the MenuModel to interact with the menu data in the database
-const MenuModel = require("../models/menuModel");
+// Import the database connection
+const db = require("../database/database");  // Se till att detta pekar på rätt databasfil
 
 // Controller function to get all menu items
 const getAllMenuItems = (req, res) => {
     try {
-        const menu = MenuModel.getAll();  // Retrieves all menu items
-        res.json(menu);  // Sends the menu items as a JSON response
+        const menu = db.prepare("SELECT * FROM menu WHERE is_deleted = FALSE").all(); // Filtrera bort borttagna objekt
+        res.json(menu);
     } catch (error) {
-        res.status(500).json({ error: "Error fetching menu items" }); // Handles database errors
+        res.status(500).json({ error: "Fel vid hämtning av objekt på menyn." });
     }
 };
 
 // Controller function to get a single menu item by ID
 const getMenuItemById = (req, res) => {
     try {
-        const item = MenuModel.getById(req.params.id);  // Fetch the menu item by its ID
-        item ? res.json(item) : res.status(404).json({ error: "Product not found" });  // If item exists, return it, else return 404
+        const stmt = db.prepare("SELECT * FROM menu WHERE id = ? AND is_deleted = FALSE");
+        const item = stmt.get(req.params.id);
+        
+        item ? res.json(item) : res.status(404).json({ error: "Produkten hittades inte" });
     } catch (error) {
-        res.status(500).json({ error: "Error fetching the menu item" });  // Handle database errors
+        res.status(500).json({ error: "Fel vid hämtning av produkten." });
     }
 };
 
 // Controller function to create a new menu item
 const createMenuItem = (req, res) => {
-    const { title, desc, price } = req.body;  // Extracts the title, description, and price from the request body
+    const { title, desc, price } = req.body;  
 
-    // Validate input data
     if (!title || !desc || !price) {
-        return res.status(400).json({ error: "All fields (title, desc, price) must be provided" });
+        return res.status(400).json({ error: "Alla fält (title, desc, price) måste vara ifyllda" });
     }
 
     try {
-        const result = MenuModel.create(title, desc, price);  // Creates a new menu item in the database
-        res.status(201).json({ id: result.lastInsertRowId, title, desc, price });  // Returns the newly created menu item with its ID
+        const stmt = db.prepare("INSERT INTO menu (title, desc, price) VALUES (?, ?, ?)");
+        const result = stmt.run(title, desc, price);
+        
+        res.status(201).json({ id: result.lastInsertRowid, title, desc, price });
     } catch (error) {
-        res.status(500).json({ error: "Error creating menu item" });  // Handles any database errors
+        res.status(500).json({ error: "Fel vid skapandet av produkt." });
     }
 };
 
 // Controller function to update an existing menu item by ID
 const updateMenuItem = (req, res) => {
-    const { title, desc, price } = req.body;  // Extracts the updated details from the request body
+    const { title, desc, price } = req.body;  
 
-    // Validate input data
     if (!title || !desc || !price) {
-        return res.status(400).json({ error: "All fields (title, desc, price) must be provided" });
+        return res.status(400).json({ error: "Alla fält (title, desc, price) måste vara ifyllda" });
     }
 
     try {
-        const result = MenuModel.update(req.params.id, title, desc, price);  // Updates the menu item in the database
-        result.changes ? res.json({ id: req.params.id, title, desc, price }) : res.status(404).json({ error: "Product not found" });  // Return the updated item or 404 if not found
+        const stmt = db.prepare("UPDATE menu SET title = ?, desc = ?, price = ? WHERE id = ? AND is_deleted = FALSE");
+        const result = stmt.run(title, desc, price, req.params.id);
+
+        result.changes ? res.json({ id: req.params.id, title, desc, price }) 
+                       : res.status(404).json({ error: "Produkten hittades inte" });
     } catch (error) {
-        res.status(500).json({ error: "Error updating menu item" });  // Handles any database errors
+        res.status(500).json({ error: "Fel vid uppdatering av produkt." });
     }
-};
+}; 
 
 // Controller function to delete a menu item by ID
 const deleteMenuItem = (req, res) => {
     try {
-        const result = MenuModel.delete(req.params.id);  // Deletes the menu item from the database
-        result.changes ? res.json({ message: "Product has been deleted" }) : res.status(404).json({ error: "Product not found" });  // Return success message or 404 if not found
+        const stmt = db.prepare("UPDATE menu SET is_deleted = TRUE WHERE id = ?");
+        const result = stmt.run(req.params.id);
+
+        result.changes ? res.json({ message: `Produkt med ID ${req.params.id} har markerats som borttagen.` })
+                       : res.status(404).json({ error: "Produkten hittades inte" });
     } catch (error) {
-        res.status(500).json({ error: "Error deleting menu item" });  // Handles any database errors
+        res.status(500).json({ error: "Fel vid borttagning av produkt." });
     }
 };
 
-// Export all controller functions for use in routing
+// Controller function to restore a deleted menu item by ID
+const restoreMenuItem = (req, res) => {
+    try {
+        const stmt = db.prepare("UPDATE menu SET is_deleted = FALSE WHERE id = ?");
+        const result = stmt.run(req.params.id);
+
+        result.changes ? res.json({ message: `Produkt med ID ${req.params.id} har återställts.` })
+                       : res.status(404).json({ error: "Produkten hittades inte" });
+    } catch (error) {
+        res.status(500).json({ error: "Fel vid återställning av produkt." });
+    }
+};
+
+// Export all controller functions
 module.exports = {
     getAllMenuItems,
     getMenuItemById,
     createMenuItem,
-    updateMenuItem,
-    deleteMenuItem
+    updateMenuItem,  
+    deleteMenuItem,
+    restoreMenuItem,
 };
