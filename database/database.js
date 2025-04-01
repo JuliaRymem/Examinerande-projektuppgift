@@ -1,12 +1,22 @@
-// Skapar kampanjtabell i databasen
+const Database = require("better-sqlite3");
+const path = require("path");
 
-const db = require("better-sqlite3");
+// Create a new database-connection to menu.db
+const db = new Database(path.join(__dirname, "menu.db"), { verbose: console.log });
 
-// Ansluter till SQLite-databasen
-const database = new db("/", { verbose: console.log }); //** Skriv in databasens namn här ?? **
+// Create menu-table if it doesn't already exists
+db.exec(`
+  CREATE TABLE IF NOT EXISTS menu (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    desc TEXT NOT NULL,
+    price INTEGER NOT NULL,
+    is_deleted BOOLEAN DEFAULT FALSE
+  );
+`);
 
-// Skapar kampanjtabell
-database.exec(`
+// Create campaign-table if doesn't already exists
+db.exec(`
   CREATE TABLE IF NOT EXISTS campaigns (
     id INTEGER PRIMARY KEY AUTOINCREMENT,  
     name TEXT NOT NULL,                   
@@ -17,14 +27,15 @@ database.exec(`
   );
 `);
 
-// Kontrollerar om det redan finns kampanjer i databasen
-const campaignExists = database.prepare("SELECT COUNT(*) AS count FROM campaigns").get();
+// Add to test campaign-functionality if non exists
+const campaignExists = db.prepare("SELECT COUNT(*) AS count FROM campaigns").get();
 if (campaignExists.count === 0) {
-  // Om inga kampanjer finns, lägg till en testkampanj (?)
-  database.prepare(`
+  // If no campaign exists then add a campaign
+  db.prepare(`
     INSERT INTO campaigns (name, productId, discountType, discountValue, isActive)
     VALUES ('Köp 2 bryggkaffe, få en gratis', 1, 'buy2get1', 100, 1)
   `).run();
 }
 
-module.exports = database;
+module.exports = db;
+
