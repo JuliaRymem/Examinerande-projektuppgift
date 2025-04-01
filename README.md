@@ -3,7 +3,7 @@
 ## Svenska (SCROLL DOWN FOR INSTRUCTIONS IN ENGLISH)
 
 ## Beskrivning
-Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att hantera en meny med kaffedrycker. API:et möjliggör CRUD-operationer (Create, Read, Update, Delete) samt "soft delete"-funktionalitet.
+Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att hantera en meny med kaffedrycker. API:et möjliggör CRUD-operationer (Create, Read, Update, Delete) samt "soft delete"-funktionalitet. Det innehåller också kampanjhantering för att erbjuda rabatter baserat på specifika regler.
 
 ---
 
@@ -14,6 +14,8 @@ Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att ha
 - Uppdatera en befintlig produkt
 - Ta bort en produkt (soft delete)
 - Återställa en borttagen produkt
+- Hämta aktiva kampanjer
+- Applicera kampanjer på en varukorg
 
 ---
 
@@ -62,87 +64,27 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 ## API-Endpoints
 
-### Hämta hela menyn
-**GET** `/menu`
+### Hämta aktiva kampanjer
+**GET** `/campaigns`
 
 **Svarsexempel:**
 ```json
 [
   {
     "id": 1,
-    "title": "Bryggkaffe",
-    "desc": "Bryggd på månadens bönor.",
-    "price": 39
+    "name": "Köp 2 bryggkaffe, få en gratis",
+    "productId": 1,
+    "discountType": "buy2get1",
+    "discountValue": 100,
+    "isActive": 1
   }
 ]
 ```
 
 ---
 
-### Hämta en specifik produkt
-**GET** `/menu/:id`
-
-**Svarsexempel:**
-```json
-{
-  "id": 1,
-  "title": "Bryggkaffe",
-  "desc": "Bryggd på månadens bönor.",
-  "price": 39
-}
-```
-
----
-
-### Lägga till en ny produkt
-**POST** `/menu`
-
-**Body (JSON):**
-```json
-{
-  "title": "Espresso",
-  "desc": "En stark och fyllig espresso.",
-  "price": 45
-}
-```
-
----
-
-### Uppdatera en produkt
-**PUT** `/menu/:id`
-
-**Body (JSON):**
-```json
-{
-  "title": "Uppdaterat namn",
-  "desc": "Ny beskrivning",
-  "price": 50
-}
-```
-
----
-
-### Ta bort en produkt (soft delete)
-**DELETE** `/menu/:id`
-
-**Svarsexempel:**
-```json
-{
-  "message": "Produkt med ID 1 har markerats som borttagen."
-}
-```
-
----
-
-### Återställa en borttagen produkt
-**PUT** `/menu/restore/:id`
-
-**Svarsexempel:**
-```json
-{
-  "message": "Produkt med ID 1 har återställts."
-}
-```
+## Kampanjhantering
+API:et hanterar kampanjer som kan appliceras på varukorgen baserat på fördefinierade regler. Exempelvis kan en kampanj innebära "köp 2, få 1 gratis".
 
 ---
 
@@ -153,12 +95,12 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 ---
 
-# Airbean API 
+# Airbean API
 
 ## English (SCROLL UP FOR INSTRUCTIONS IN SWEDISH)
 
 ## Description
-Airbean API is a REST API built with Express.js and better-sqlite3 to manage a menu of coffee beverages. The API enables CRUD operations (Create, Read, Update, Delete) as well as "soft delete" functionality.
+Airbean API is a REST API built with Express.js and better-sqlite3 to manage a menu of coffee beverages. The API enables CRUD operations (Create, Read, Update, Delete) as well as "soft delete" functionality. It also includes campaign management to provide discounts based on specific rules.
 
 ---
 
@@ -169,6 +111,8 @@ Airbean API is a REST API built with Express.js and better-sqlite3 to manage a m
 - Update an existing product
 - Delete a product (soft delete)
 - Restore a deleted product
+- Retrieve active campaigns
+- Apply campaigns to a shopping cart
 
 ---
 
@@ -217,87 +161,27 @@ Now you can use the API via `http://localhost:3000/`
 
 ## API Endpoints
 
-### Retrieve the entire menu
-**GET** `/menu`
+### Retrieve active campaigns
+**GET** `/campaigns`
 
 **Response Example:**
 ```json
 [
   {
     "id": 1,
-    "title": "Drip Coffee",
-    "desc": "Brewed with this month's beans.",
-    "price": 39
+    "name": "Buy 2 drip coffee, get one free",
+    "productId": 1,
+    "discountType": "buy2get1",
+    "discountValue": 100,
+    "isActive": 1
   }
 ]
 ```
 
 ---
 
-### Retrieve a specific product
-**GET** `/menu/:id`
-
-**Response Example:**
-```json
-{
-  "id": 1,
-  "title": "Drip Coffee",
-  "desc": "Brewed with this month's beans.",
-  "price": 39
-}
-```
-
----
-
-### Add a new product
-**POST** `/menu`
-
-**Body (JSON):**
-```json
-{
-  "title": "Espresso",
-  "desc": "A strong and rich espresso.",
-  "price": 45
-}
-```
-
----
-
-### Update a product
-**PUT** `/menu/:id`
-
-**Body (JSON):**
-```json
-{
-  "title": "Updated Name",
-  "desc": "New description",
-  "price": 50
-}
-```
-
----
-
-### Delete a product (soft delete)
-**DELETE** `/menu/:id`
-
-**Response Example:**
-```json
-{
-  "message": "Product with ID 1 has been marked as deleted."
-}
-```
-
----
-
-### Restore a deleted product
-**PUT** `/menu/restore/:id`
-
-**Response Example:**
-```json
-{
-  "message": "Product with ID 1 has been restored."
-}
-```
+## Campaign Management
+The API manages campaigns that can be applied to the shopping cart based on predefined rules. For example, a campaign might involve "buy 2, get 1 free".
 
 ---
 
@@ -305,6 +189,4 @@ Now you can use the API via `http://localhost:3000/`
 - **GitHub**: [Tobias-Thor](https://github.com/Tobias-Thor)
 - **LinkedIn**: [Tobias Thor](https://www.linkedin.com/in/tobias-thor-810215182/)
 - **Email**: [tobiasthor@protonmail.com](mailto:tobiasthor@protonmail.com)
-
-
 
