@@ -161,8 +161,10 @@ Nu kan du använda API:et via `http://localhost:3000/`
     "isActive": 1
   }
 ]
-```
 
+---
+
+```
 ## Kontakt
 - **GitHub**: [Tobias-Thor](https://github.com/Tobias-Thor)
 - **LinkedIn**: [Tobias Thor](https://www.linkedin.com/in/tobias-thor-810215182/)
