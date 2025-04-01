@@ -208,7 +208,14 @@ API:et använder SQLite via better-sqlite3 och har följande tabeller:
 
 ---
 
-## Kontakt
+## Projektmedlemmar och kontaktuppgifter
+### Daniel Akestam
+- **GitHub**:
+### Julia Rasmusson
+- **GitHub**:
+### Daniel Arvebäck
+- **GitHub**:
+### Tobias Thor
 - **GitHub**: [Tobias-Thor](https://github.com/Tobias-Thor)
 - **LinkedIn**: [Tobias Thor](https://www.linkedin.com/in/tobias-thor-810215182/)
 - **E-post**: [tobiasthor@protonmail.com](mailto:tobiasthor@protonmail.com)
