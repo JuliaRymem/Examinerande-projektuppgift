@@ -1,11 +1,13 @@
 // Import better-sqlite3 library to interact with SQlite database
-// create a new database connection
 const Database = require("better-sqlite3");
+
+// Import the path module to work with file and directory paths
 const path = require("path");
 
-  const db = new Database(path.join(__dirname, "menu.db"), { verbose: console.log});
+// Create a new database connection to the 'menu.db' file, with verbose logging enabled
+const db = new Database(path.join(__dirname, "menu.db"), { verbose: console.log});
   
-// Creates an SQL-TABLE
+// Create the 'menu' SQL-table if it doesn't already exist
 db.exec(`
     CREATE TABLE IF NOT EXISTS menu (
     id INTEGER PRIMARY KEY,
@@ -15,5 +17,5 @@ db.exec(`
     );
     `);
 
-    // Exports this file as a module
-    module.exports = db;
+// Export the database connection so it can be used in other files
+module.exports = db;
