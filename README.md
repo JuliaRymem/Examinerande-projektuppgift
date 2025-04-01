@@ -208,6 +208,13 @@ API:et använder SQLite via better-sqlite3 och har följande tabeller:
 
 ---
 
+## Websockets (OBSERVERA ATT DETTA INTE FINNS FÖR NÄRVARANDE MEN DENNA PUNKT INNEHÅLLER EN PLANERING FÖR DET FÖR FRAMTIDA ITERATIONER AV DETTA PROJEKT)
+-Om ni skulle implementera websockets i detta projekt, beskriv vilken
+funktionalitet det skulle ge användaren och vilket mervärde det skulle
+tillföra.
+
+---
+
 ## Projektmedlemmar och kontaktuppgifter
 ### Daniel Akestam
 - **GitHub**:
