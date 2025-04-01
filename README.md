@@ -1,7 +1,7 @@
 # Airbean API
 
 ## Beskrivning
-Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att hantera en meny med kaffedrycker. API:et möjliggör CRUD-operationer (Create, Read, Update, Delete) samt "soft delete"-funktionalitet.
+Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att hantera en meny med kaffedrycker. API:et möjliggör CRUD-operationer (Create, Read, Update, Delete) samt "soft delete"-funktionalitet. Det innehåller också kampanjhantering för att erbjuda rabatter baserat på specifika regler.
 
 ---
 
@@ -12,6 +12,8 @@ Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att ha
 - Uppdatera en befintlig produkt
 - Ta bort en produkt (soft delete)
 - Återställa en borttagen produkt
+- Hämta aktiva kampanjer
+- Applicera kampanjer på en varukorg
 
 ---
 
@@ -58,7 +60,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 ---
 
-## API-Endpunkter
+## API-Endpoints
 
 ### Hämta hela menyn
 **GET** `/menu`
@@ -143,6 +145,23 @@ Nu kan du använda API:et via `http://localhost:3000/`
 ```
 
 ---
+
+### Hämta aktiva kampanjer
+
+**GET** /campaigns
+
+**Svarsexempel:**
+[
+```{
+    "id": 1,
+    "name": "Köp 2 bryggkaffe, få en gratis",
+    "productId": 1,
+    "discountType": "buy2get1",
+    "discountValue": 100,
+    "isActive": 1
+  }
+]
+```
 
 ## Kontakt
 - **GitHub**: [Tobias-Thor](https://github.com/Tobias-Thor)
