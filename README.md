@@ -1,7 +1,7 @@
 # Airbean API
 
 ## Beskrivning
-Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att hantera en meny med kaffedrycker. API:et möjliggör CRUD-operationer (Create, Read, Update, Delete) samt "soft delete"-funktionalitet. Det innehåller också kampanjhantering för att erbjuda rabatter baserat på specifika regler.
+Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att hantera en meny med kaffedrycker. API:et möjliggör CRUD-operationer (Create, Read, Update, Delete) samt "soft delete"-funktionalitet. Det innehåller också kampanjhantering för att erbjuda rabatter baserat på specifika regler. Dessutom hanterar API:et användarhantering och orderhistorik.
 
 ---
 
@@ -14,8 +14,34 @@ Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att ha
 - Återställa en borttagen produkt
 - Hämta aktiva kampanjer
 - Applicera kampanjer på en varukorg
-
+- Hantera användare (skapa, hämta, uppdatera och ta bort användare)
+- Hantera ordrar (skapa och hämta orderhistorik)
+  
 ---
+
+## Middleware
+API:et använder en middleware för att logga alla inkommande requests samt en autentiseringsmiddleware för att begränsa åtkomst till vissa sidor.
+
+### Logging Middleware
+Loggar alla inkommande förfrågningar med tidsstämpel.
+
+```function middleware(req, res, next) {
+    console.log(`${new Date().toISOString()}: ${req.originalUrl}`);
+    next();
+}
+```
+### Autentiseringsmiddleware
+Begränsar åtkomst till vissa endpoints baserat på query-parametern admin=true.
+
+```function authAccess(req, res, next) {
+    if (req.query.admin === 'true') {
+        req.admin = true;    
+        next();
+    } else {
+        res.send('Fel: Du måste vara en admin');
+    }
+}
+```
 
 ## Teknologier
 - **Node.js** (Backend-runtime)
@@ -162,6 +188,25 @@ Nu kan du använda API:et via `http://localhost:3000/`
   }
 ]
 ```
+
+### Hantera ordrar
+Skapa en ny order
+
+```POST /create```
+
+Hämta orderhistorik för en användare
+
+```GET /history/:userId```
+
+---
+
+## Databas
+API:et använder SQLite via better-sqlite3 och har följande tabeller:
+-users (för användarhantering)
+-orders (för orderhistorik)
+-menu (för kaffemenyn)
+
+---
 
 ## Kontakt
 - **GitHub**: [Tobias-Thor](https://github.com/Tobias-Thor)
