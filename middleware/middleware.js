@@ -28,7 +28,6 @@ function authAccess(req, res, next) {
 
 app.listen(3000, () => console.log('Servern är igång'))
 
-
 //Startar en express-server på port 3000
 //Loggar alla requests via en middleware
 //visar "Airbean API"

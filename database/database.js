@@ -1,10 +1,12 @@
 const Database = require("better-sqlite3");
 const path = require("path");
+// NEW CODE ?
+const db = new Database(path.join(__dirname, "database.db"), { verbose: console.log });
 
-// Create a new database-connection to menu.db
-const db = new Database(path.join(__dirname, "menu.db"), { verbose: console.log });
+// OLD CODE
+/* const db = new Database(path.join(__dirname, "menu.db"), { verbose: console.log }); */
 
-// Create menu-table if it doesn't already exists
+ // Create menu-table if it doesn't already exists
 db.exec(`
   CREATE TABLE IF NOT EXISTS menu (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,6 +38,29 @@ if (campaignExists.count === 0) {
     VALUES ('Köp 2 bryggkaffe, få en gratis', 1, 'buy2get1', 100, 1)
   `).run();
 }
+
+// ADDED CODE
+db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+  `);
+
+  // ADDED CODE
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    product TEXT NOT NULL,
+    amount INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);
+    `);
 
 module.exports = db;
 

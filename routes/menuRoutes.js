@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const menuController = require("../controllers/menuController");
+const db = require("../database/database");  //provar..
 
 // Fetch all menu items
 router.get("/", menuController.getAllMenuItems);

@@ -5,6 +5,7 @@ const {
   loginUser,
   deleteUser,
 } = require("../controllers/userController");
+const db = require("../database/database");  //provar..
 
 // POST /register
 router.post("/register", registerUser);
@@ -14,10 +15,7 @@ router.post("/login", loginUser);
 
 // DELETE /delete/:id
 router.delete("/delete/:id", deleteUser);
-=======
-const express = require('express');
-const router = express.Router();
-const userController = require('../controllers/userController');
+
 
 // grabs all users
 router.get('/users', async (req, res) => {

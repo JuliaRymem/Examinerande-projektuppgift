@@ -4,6 +4,7 @@ const {
   createOrder,
   getOrderHistory,
 } = require("../controllers/orderController");
+const db = require("../database/database");  //provar...
 
 // Skapa ny order
 router.post("/create", createOrder);
