@@ -1,3 +1,6 @@
+
+node_modules
+=======
 # Ignorera Node.js beroenden
 node_modules/
 
@@ -23,3 +26,4 @@ Thumbs.db
 
 # Ignorera testfiler
 coverage/
+
