@@ -1,6 +1,4 @@
 
-node_modules
-=======
 # Ignorera Node.js beroenden
 node_modules/
 
@@ -25,5 +23,6 @@ Thumbs.db
 .idea/
 
 # Ignorera testfiler
+
 coverage/
 

@@ -1,4 +1,6 @@
-const db = require("../db/db");
+
+const db = require("../database");
+
 
 const createUser = (id, username, hashedPassword) => {
   return new Promise((resolve, reject) => {
