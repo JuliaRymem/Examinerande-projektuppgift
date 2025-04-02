@@ -1,1 +1,25 @@
-node_modules
+# Ignorera Node.js beroenden
+node_modules/
+
+# Ignorera loggfiler
+*.log
+
+# Ignorera byggfiler (om du använder någon byggprocess)
+dist/
+build/
+
+# Ignorera filer med känslig information
+*.env
+
+# Ignorera MacOS-specifika filer
+.DS_Store
+
+# Ignorera Windows-specifika filer
+Thumbs.db
+
+# Ignorera IDE-specifika filer (t.ex. VS Code)
+.vscode/
+.idea/
+
+# Ignorera testfiler
+coverage/
