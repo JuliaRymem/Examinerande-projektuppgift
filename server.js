@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const db = require("./database/database");  // db .. ?
+const db = require("./database/database");  // ??
 const menuRoutes = require("./routes/menuRoutes");
 const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orders");
