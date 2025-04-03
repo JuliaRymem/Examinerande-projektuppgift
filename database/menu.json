@@ -22,7 +22,8 @@
       "id": 4,
       "title": "Latte Macchiato Speciale",
       "desc": "Bryggd på månadens bönor.",
-      "price": 40
+      "price": 40,
+      "active": true
     },
     {
       "id": 5,

@@ -1,6 +1,5 @@
 const Database = require("better-sqlite3");
 const path = require("path");
-
 const db = new Database(path.join(__dirname, "database.db"), { verbose: console.log });
 
 // 🔍 Funktion för att kolla om en kolumn existerar
@@ -28,7 +27,7 @@ db.exec(`
     is_deleted BOOLEAN DEFAULT FALSE
   );
 
-  CREATE TABLE IF NOT EXISTS campaigns (
+  CREATE TABLE IF NOT EXISTS campaign (
     id INTEGER PRIMARY KEY AUTOINCREMENT,  
     name TEXT NOT NULL,                   
     productId INTEGER NOT NULL,           
@@ -36,7 +35,6 @@ db.exec(`
     discountValue INTEGER NOT NULL,        
     isActive INTEGER DEFAULT 1             
   );
-
   CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -79,10 +77,10 @@ try {
 }
 
 // 🎯 Lägg till en testkampanj om inga kampanjer finns
-const campaignExists = db.prepare("SELECT COUNT(*) AS count FROM campaigns").get();
+const campaignExists = db.prepare("SELECT COUNT(*) AS count FROM campaign").get();
 if (campaignExists.count === 0) {
   db.prepare(`
-    INSERT INTO campaigns (name, productId, discountType, discountValue, isActive)
+    INSERT INTO campaign (name, productId, discountType, discountValue, isActive)
     VALUES ('Köp 2 bryggkaffe, få en gratis', 1, 'buy2get1', 100, 1)
   `).run();
   console.log("✅ Testkampanj tillagd!");

@@ -6,7 +6,6 @@ const db = require("../database/database"); */
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-
 const router = express.Router();
 
 // Define the path to menu.json
@@ -74,19 +73,63 @@ router.put("/:id", (req, res) => {
     });
 });
 
+// DELETE - Soft delete a menu item
+router.delete("/:id", (req, res) => {
+    const itemId = parseInt(req.params.id, 10);
+
+    fs.readFile(menuPath, "utf8", (err, data) => {
+        if (err) return res.status(500).json({ error: "Failed to load menu." });
+
+        let menuData = JSON.parse(data);
+        const itemIndex = menuData.menu.findIndex(item => item.id === itemId);
+
+        if (itemIndex === -1) return res.status(404).json({ error: "Item not found" });
+
+        menuData.menu[itemIndex].active = false; // Mark item as inactive (soft delete)
+
+        fs.writeFile(menuPath, JSON.stringify(menuData, null, 2), (err) => {
+            if (err) return res.status(500).json({ error: "Failed to delete menu item." });
+
+            res.json({ message: "Menu item deleted successfully", item: menuData.menu[itemIndex] });
+        });
+    });
+});
+
+// PATCH - Restore a menu item
+router.patch("/:id/restore", (req, res) => {
+    const itemId = parseInt(req.params.id, 10);
+
+    fs.readFile(menuPath, "utf8", (err, data) => {
+        if (err) return res.status(500).json({ error: "Failed to load menu." });
+
+        let menuData = JSON.parse(data);
+        const itemIndex = menuData.menu.findIndex(item => item.id === itemId);
+
+        if (itemIndex === -1) return res.status(404).json({ error: "Item not found" });
+
+        menuData.menu[itemIndex].active = true; // Restore item
+
+        fs.writeFile(menuPath, JSON.stringify(menuData, null, 2), (err) => {
+            if (err) return res.status(500).json({ error: "Failed to restore menu item." });
+
+            res.json({ message: "Menu item restored successfully", item: menuData.menu[itemIndex] });
+        });
+    });
+});
+
 module.exports = router;
 
 /* Fetch all menu items
-router.get("/", menuController.getAllMenuItems);
+router.get("/", menuController.getAllMenuItems); DONE
 
 /* Fetch a specific menu item by I
-router.get("/:id", menuController.getMenuItemById );
+router.get("/:id", menuController.getMenuItemById ); DONE
 
 // Create a new menu item
-router.post("/", menuController.createMenuItem);
+router.post("/", menuController.createMenuItem); // IGNORE
 
 // Update an existing menu item
-router.put("/:id", menuController.updateMenuItem);
+router.put("/:id", menuController.updateMenuItem); // DONE
 
 // Delete a menu item
 router.delete("/:id", menuController.deleteMenuItem);
