@@ -1,12 +1,12 @@
 const db = require("../database/database");
 
 // Skapa en ny order
-const createOrder = (userId, items) => {
+const createOrder = (user_id, items) => {
     return new Promise((resolve, reject) => {
         const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
         const stmt = db.prepare("INSERT INTO orders (user_id, total_price) VALUES (?, ?)");
-        const result = stmt.run(userId, totalPrice);
+        const result = stmt.run(user_id, totalPrice);
         const orderId = result.lastInsertRowid;
 
         if (!orderId) {
@@ -24,7 +24,7 @@ const createOrder = (userId, items) => {
 };
 
 // Hämta orderhistorik för en användare
-const getOrderHistory = (userId) => {
+const getOrderHistory = (user_id) => {
     return new Promise((resolve, reject) => {
         const query = `
             SELECT orders.id, orders.total_price, orders.created_at,
@@ -34,7 +34,7 @@ const getOrderHistory = (userId) => {
             JOIN menu ON order_items.product_id = menu.id
             WHERE orders.user_id = ?`;
 
-        const history = db.prepare(query).all(userId);
+        const history = db.prepare(query).all(user_id);
         resolve(history);
     });
 };
