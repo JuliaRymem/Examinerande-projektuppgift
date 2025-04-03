@@ -5,9 +5,8 @@ const {
   loginUser,
   deleteUser,
 } = require("../controllers/userController");
-const db = require("../database/database");  //provar..
 
-// POST /register
+// POST /register 
 router.post("/register", registerUser);
 
 // POST /login
@@ -17,7 +16,7 @@ router.post("/login", loginUser);
 router.delete("/delete/:id", deleteUser);
 
 
-// grabs all users
+/* grabs all users
 router.get('/users', async (req, res) => {
   try {
     const users = await userController.findAll();
@@ -71,7 +70,7 @@ router.delete('/users/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
+}); */
 
 module.exports = router;
 
