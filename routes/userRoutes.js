@@ -1,5 +1,26 @@
 const express = require("express");
 const router = express.Router();
+const userController = require("../controllers/userController");
+
+// 🟢 Skapa en ny användare
+router.post("/", userController.createUser);
+
+// 🟢 Hämta alla användare
+router.get("/", userController.getAllUsers);
+
+// 🟢 Hämta en användare via ID
+router.get("/:id", userController.getUserById);
+
+// 🟢 Uppdatera en användare
+router.put("/:id", userController.updateUser);
+
+// 🟢 Ta bort en användare
+router.delete("/:id", userController.deleteUser);
+
+module.exports = router;
+
+/* const express = require("express");
+const router = express.Router();
 const {
   registerUser,
   loginUser,
@@ -13,7 +34,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // DELETE /delete/:id
-router.delete("/delete/:id", deleteUser);
+router.delete("/delete/:id", deleteUser); */
 
 
 /* grabs all users

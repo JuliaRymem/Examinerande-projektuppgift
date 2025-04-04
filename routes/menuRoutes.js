@@ -1,19 +1,26 @@
-/* const express = require("express");
-const router = express.Router();
-const menuController = require("../controllers/menuController");
-const db = require("../database/database"); */
+/* Den här filen hanterar CRUD-operationer 
+(Create, Read, Update, Delete) på menyn, 
+men sparar data i en JSON-fil istället för 
+en databas. */
 
+/* Importerar nödvändiga moduler... */
 const express = require("express");
+/* För att läsa och skriva filer */
 const fs = require("fs");
+/* För att hantera fil- och mappvägar */
 const path = require("path");
+/* Skapar en router för HTTP-rutter */
 const router = express.Router();
 
-// Define the path to menu.json
-const menuPath = path.join(__dirname, "../database/menu.json"); // Adjust if needed
+/* Sökvägen till menu.json */
+const menuPath = path.join(__dirname, "../database/menu.json");
 
-// GET /menu - Serve menu.json contents
+/* Hämtar hela menyn */
+/* Hanterar en GET-förfrågan till /menu */
 router.get("/", (req, res) => {
+    /* Läser in innehållet i menu.json som en textsträng */
     fs.readFile(menuPath, "utf8", (err, data) => {
+        /* Om ett fel uppstår skickas status-koden 500 */
         if (err) {
             return res.status(500).json({ error: "Failed to load menu." });
         }
@@ -21,9 +28,9 @@ router.get("/", (req, res) => {
     });
 });
 
-// GET specific menu item by ID
+/* Hämtar ett specifikt menyobjekt med GET-metoden */
 router.get("/:id", (req, res) => {
-    const itemId = parseInt(req.params.id, 10); // Convert ID to a number
+    const itemId = parseInt(req.params.id, 10);
 
     fs.readFile(menuPath, "utf8", (err, data) => {
         if (err) {
@@ -31,8 +38,9 @@ router.get("/:id", (req, res) => {
         }
 
         const menuData = JSON.parse(data);
-        const item = menuData.menu.find((menuItem) => menuItem.id === itemId); // Access the "menu" array
-
+        /* Läser menu.json och söker efter objektet med det ID:t */
+        const item = menuData.menu.find((menuItem) => menuItem.id === itemId);
+        /* Om inget hittas så  skickas statuskoden "404 Item not found" */
         if (!item) {
             return res.status(404).json({ error: "Item not found" });
         }
@@ -41,9 +49,10 @@ router.get("/:id", (req, res) => {
     });
 });
 
+/* Uppdaterar ett menyobjekt med PUT-metoden */
 router.put("/:id", (req, res) => {
     const itemId = parseInt(req.params.id, 10);
-    const { title, desc, price } = req.body; // Data to update
+    const { title, desc, price } = req.body;
 
     fs.readFile(menuPath, "utf8", (err, data) => {
         if (err) {
@@ -52,18 +61,18 @@ router.put("/:id", (req, res) => {
 
         let menuData = JSON.parse(data);
 
-        // Find the item index
+        /* Hittar meny-objektets index */
         const itemIndex = menuData.menu.findIndex((item) => item.id === itemId);
         if (itemIndex === -1) {
             return res.status(404).json({ error: "Item not found" });
         }
 
-        // Update the item
+        /* Uppdaterar meny-objektet med pris, beskrivning och namn */
         if (title) menuData.menu[itemIndex].title = title;
         if (desc) menuData.menu[itemIndex].desc = desc;
         if (price) menuData.menu[itemIndex].price = price;
 
-        // Save updated data
+        /* Sparar uppdaterad data */
         fs.writeFile(menuPath, JSON.stringify(menuData, null, 2), (err) => {
             if (err) {
                 return res.status(500).json({ error: "Failed to update menu." });
@@ -73,7 +82,9 @@ router.put("/:id", (req, res) => {
     });
 });
 
-// DELETE - Soft delete a menu item
+/* "Mjuk borttagning" ("Soft delete") av en menyprodukt med DELETE-metoden */
+/* Istället för att radera objektet helt, sätter man active = false.
+och det kallas "soft delete", eftersom objektet fortfarande finns kvar men är inaktivt. */
 router.delete("/:id", (req, res) => {
     const itemId = parseInt(req.params.id, 10);
 
@@ -95,7 +106,7 @@ router.delete("/:id", (req, res) => {
     });
 });
 
-// PATCH - Restore a menu item
+/* Återställer ett menyobjekt med PATCH-metoden */
 router.patch("/:id/restore", (req, res) => {
     const itemId = parseInt(req.params.id, 10);
 
@@ -106,8 +117,8 @@ router.patch("/:id/restore", (req, res) => {
         const itemIndex = menuData.menu.findIndex(item => item.id === itemId);
 
         if (itemIndex === -1) return res.status(404).json({ error: "Item not found" });
-
-        menuData.menu[itemIndex].active = true; // Restore item
+        /* Sätter active = true för att återaktivera menyalternativet */
+        menuData.menu[itemIndex].active = true;
 
         fs.writeFile(menuPath, JSON.stringify(menuData, null, 2), (err) => {
             if (err) return res.status(500).json({ error: "Failed to restore menu item." });
@@ -117,7 +128,11 @@ router.patch("/:id/restore", (req, res) => {
     });
 });
 
+/* Exporterar modulen så att den kan användas i andra filer */
 module.exports = router;
+
+/* const menuController = require("../controllers/menuController");
+const db = require("../database/database"); */
 
 /* Fetch all menu items
 router.get("/", menuController.getAllMenuItems); DONE
