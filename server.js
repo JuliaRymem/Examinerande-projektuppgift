@@ -40,7 +40,7 @@ app.use("/campaign", (req, res, next) => {
 }, campaignRoutes);
 /* Hanterar förfrågningar till huvudsidan */
 app.get('/', (req, res) => {
-    res.send('Huvudsida');
+    res.send('Välkommen till huvudsidan!');
 });
   
 /* Startar servern på port 3000 och loggar ett meddelande */
