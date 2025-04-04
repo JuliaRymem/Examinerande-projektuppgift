@@ -77,7 +77,7 @@ const updateMenuItem = (req, res) => {
 
 /* Kodblock för att bort ett menyalternativ med "soft delete" ("mjuk borttagning") */
 /* Produkten tas inte bort helt från databasen, utan bara markeras som raderad */
-const deleteMenuItm = (req, res) => {
+const deleteMenuItem = (req, res) => {
     try {
         
         const result = MenuModel.delete(req.params.id);
