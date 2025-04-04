@@ -37,7 +37,7 @@ db.exec(`
   );
   CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
+    user_id TEXT NOT NULL,
     product TEXT NOT NULL,
     amount INTEGER NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

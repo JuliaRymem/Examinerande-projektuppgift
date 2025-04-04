@@ -1,7 +1,6 @@
 
 const db = require("../database/database");
 
-
 const createUser = (id, username, hashedPassword) => {
   try {
     const query = "INSERT INTO users (id, username, password) VALUES (?, ?, ?)";

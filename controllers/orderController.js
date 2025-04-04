@@ -1,7 +1,7 @@
-const { createOrder, getOrderHistory } = require("../models/orderModel");
 const db = require("../database/database");
+const { validate: validateUUID } = require("uuid");
 
-// Validera att ett order-item har rätt format
+// Validerar att ett item har korrekt format
 const validateItem = (item) => {
   if (!item.id || typeof item.id !== "number") {
     throw new Error("Produkt-ID måste vara ett nummer.");
@@ -14,50 +14,53 @@ const validateItem = (item) => {
   }
 };
 
-// Hämtar produktdetaljer från menyn och kontrollerar att produkten finns samt att priset stämmer
+// Hämtar produktdetaljer och kontrollerar existens/pris (behåll eller integrera i middleware)
 const getProductDetailsForCart = (items) => {
-  return items.map(item => {
-    validateItem(item);
+  // Se till att hämta priset som ett nummer (REAL/FLOAT)
+   return items.map(item => {
+    validateItem(item); // Validera format först
     const product = db
       .prepare("SELECT id, title, price FROM menu WHERE id = ? AND is_deleted = FALSE")
       .get(item.id);
     if (!product) {
       throw new Error(`Produkten med ID ${item.id} finns inte i menyn.`);
     }
-    if (item.hasOwnProperty("price") && item.price !== product.price) {
-      throw new Error(`Felaktigt pris för produkten med ID ${item.id}.`);
-    }
-    return { ...item, price: product.price, name: product.title };
+    // Priskontroll: Jämför bara om pris skickats med (onödigt egentligen, lita på menypriset)
+    if (item.hasOwnProperty("price") && parseFloat(item.price) !== parseFloat(product.price)) {
+       throw new Error(`Felaktigt pris för produkten med ID ${item.id}. Förväntat: ${product.price}, Fick: ${item.price}`);
+    } 
+    // Returnera alltid priset från databasen
+    return { ...item, price: parseFloat(product.price), name: product.title }; // Konvertera till float
   });
-};
+}; 
 
-// Skapar en ny order med den angivna användaren och produkterna
+// Skapar en ny order
 const createNewOrder = async (req, res) => {
   const { userId, items } = req.body;
-  
-  // Validera userId
-  if (!userId || typeof userId !== "number") {
-    return res.status(400).json({ error: "userId måste vara ett nummer." });
+
+  // Validera userId (ska vara UUID)
+  if (!userId || typeof userId !== "string" || !validateUUID(userId)) {
+    return res.status(400).json({ error: "Ogiltigt userId. Det måste vara en giltig UUID-sträng." });
   }
-  
+
   // Validera att items är en icke-tom array
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: "Order måste innehålla minst en produkt." });
   }
-  
+
   try {
-    // Hämta produktdetaljer och kontrollera pris
-    const detailedItems = getProductDetailsForCart(items);
-    
-    // Skapa en sammanfattning av ordern, t.ex. "Pizza (x2), Cola (x1)"
+    // Hämta produktdetaljer och *korrekta priser* från menyn
+    const detailedItems = getProductDetailsForCart(items); // Denna validerar också item-format och existens
+
+    // Skapa en sammanfattning av ordern
     const productSummary = detailedItems.map(item => `${item.name} (x${item.quantity})`).join(", ");
-    
-    // Beräkna totala beloppet (vi förutsätter att priserna är heltal eller att ni önskar avrunda)
+
+    // Beräkna totala beloppet baserat på *hämtade* priser
     const totalAmount = detailedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    
-    // Skapa ordern via modellen
+
+    // Skapa ordern via modellen (skicka med UUID)
     const orderResult = await createOrder(userId, productSummary, totalAmount, detailedItems);
-    
+
     res.status(201).json({
       message: "Order skapad.",
       orderId: orderResult.orderId,
@@ -66,164 +69,53 @@ const createNewOrder = async (req, res) => {
     });
   } catch (error) {
     console.error("Fel vid skapande av order:", error);
-    res.status(400).json({ error: error.message });
+    // Skicka tillbaka specifikt felmeddelande om möjligt (t.ex. från getProductDetailsForCart eller createOrder)
+    res.status(400).json({ error: error.message || "Ett oväntat fel inträffade vid skapande av order." });
   }
 };
 
-// Hämtar orderhistorik för en användare (baserat på userId som skickas via URL)
+// Hämtar orderhistorik för en användare
 const getUserOrderHistory = async (req, res) => {
-  const userId = parseInt(req.params.userId, 10);
-  if (isNaN(userId)) {
-    return res.status(400).json({ error: "Ogiltigt userId. Det måste vara ett nummer." });
+  const { userId } = req.params; // Hämta userId från URL:en
+
+  // Validera att userId är ett giltigt UUID
+  if (!uuidValidate(userId)) {
+     return res.status(400).json({ error: "Ogiltigt userId i URL. Det måste vara ett UUID." });
   }
-  
+
   try {
-    const history = await getOrderHistory(userId);
-    res.json(history || []);
+    const history = await getOrderHistory(userId); // Hämta via UUID
+    // Skicka tillbaka tom array om ingen historik finns (Model hanterar detta)
+    res.json(history);
   } catch (error) {
     console.error("Fel vid hämtning av orderhistorik:", error);
-    res.status(500).json({ error: "Kunde inte hämta orderhistorik. Försök igen senare." });
+    res.status(500).json({ error: error.message || "Kunde inte hämta orderhistorik." });
   }
 };
 
-module.exports = { createNewOrder, getUserOrderHistory };
+// Radera en specifik order
+const deleteExistingOrder = async (req, res) => {
+    const { orderId } = req.params;
 
-/* const { createOrder, getOrderHistory } = require("../models/orderModel");
-const { applyCampaign } = require("./campaignController"); // Import campaign logic NEW CODE
-const db = require("../database/database"); // Keep for fetching product details if needed for campaign
-
-// Helper function (you might already have one or need one) NEW CODE
-// Assumes applyCampaign needs full item details including price NEW CODE
-const getProductDetailsForCart = (items) => {
-    const detailedItems = items.map(item => {
-        const product = db.prepare("SELECT id, title, price FROM menu WHERE id = ?").get(item.id);
-        if (!product) {
-            throw new Error(`Product with ID ${item.id} not found during cart processing.`);
-        }
-        return { ...item, price: product.price, name: product.title }; // Add price and name needed by applyCampaign
-    });
-    return detailedItems;
-  }
-
-// Skapa ny order
-const createNewOrder = async (req, res) => {
-    const { userId, items } = req.body;
-
-    // Validera att användare och produkter är angivna
-    if (!userId || !items || items.length === 0) {
-        return res.status(400).json({ error: "Order måste innehålla en användare och minst en produkt" });
-    }
-
-      try {
-        // 1. Get full item details including current price for calculations
-        const detailedCartItems = getProductDetailsForCart(items);
-
-        // 2. Calculate original total price
-        const originalTotalPrice = detailedCartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-        // 3. Apply campaign logic
-        const { discount, discountMessage } = applyCampaign(detailedCartItems); // Pass detailed items
-        const finalTotal = originalTotalPrice - discount;
-
-        // 4. Create order using the model
-        // Pass all necessary info, including calculated values
-        const orderResult = await createOrder(userId, detailedCartItems, originalTotalPrice, discount, finalTotal);
-
-        // 5. Send response
-        res.status(201).json({
-            message: "Order skapad",
-            orderId: orderResult.orderId,
-            originalTotal: originalTotalPrice,
-            discountApplied: discountMessage || "Ingen rabatt tillämpad",
-            discountAmount: discount,
-            finalTotal: finalTotal,
-         });
-
-        } catch (error) {
-            console.error("Error creating order:", error);
-            // Check for specific product not found error from helper function
-             if (error.message.startsWith('Product with ID')) {
-                return res.status(400).json({ error: error.message });
-            }
-            res.status(500).json({ error: "Kunde inte skapa order. Försök igen senare." });
-        }
-    };
-
-    // Hämta orderhistorik för en användare
-const getUserOrderHistory = async (req, res) => { // Mark as async if needed later
-    try {
-        const history = await getOrderHistory(req.params.userId); // Use await if model becomes async
-        if (!history || history.length === 0) { // Check for null/undefined too
-            // Send 200 with empty array or message instead of 404 if user exists but has no orders
-             return res.status(200).json([]); // Or { message: "Ingen orderhistorik hittades" }
-        }
-        res.json(history);
-    } catch (error) {
-        console.error("Error fetching order history:", error);
-        res.status(500).json({ error: "Kunde inte hämta orderhistorik. Försök igen senare." });
-    }
-};
-
-module.exports = { createNewOrder, getUserOrderHistory };
-    
-    /* try {}
-        // Här kan du lägga till en check för att se om användaren existerar i databasen
-        const order = await createOrder(userId, items);
-        res.status(201).json({ message: "Order skapad", order });
-    } catch (error) {
-        console.error("Error creating order:", error); // Logga felet för debugging
-        res.status(500).json({ error: "Kunde inte skapa order. Försök igen senare." });
-    }
-}; */
-
-/* Hämta orderhistorik för en användare
-const getUserOrderHistory = async (req, res) => {
-    try {
-        const history = await getOrderHistory(req.params.userId);
-        if (history.length === 0) {
-            return res.status(404).json({ error: "Ingen orderhistorik hittades" });
-        }
-        res.json(history);
-    } catch (error) {
-        console.error("Error fetching order history:", error); // Logga felet för debugging
-        res.status(500).json({ error: "Kunde inte hämta orderhistorik. Försök igen senare." });
-    }
-};
-
-module.exports = { createNewOrder, getUserOrderHistory }; */
-
-
-/*const { createOrder, getOrderHistory } = require("../models/orderModel");
-const db = require("../database/database");  //provar...
-
-
-// Skapa ny order
-const createNewOrder = async (req, res) => {
-    const { userId, items } = req.body;
-
-    if (!userId || !items || items.length === 0) {
-        return res.status(400).json({ error: "Order måste innehålla en användare och minst en produkt" });
+    // Validera att orderId är ett nummer (INTEGER PRIMARY KEY i databasen)
+    const numericOrderId = parseInt(orderId, 10);
+    if (isNaN(numericOrderId) || numericOrderId <= 0) {
+        return res.status(400).json({ error: "Ogiltigt orderId i URL. Det måste vara ett positivt heltal." });
     }
 
     try {
-        const order = await createOrder(userId, items);
-        res.status(201).json({ message: "Order skapad", order });
+        await deleteOrder(numericOrderId);
+        // Skicka tillbaka status 204 (No Content) för lyckad radering
+        res.status(204).send();
     } catch (error) {
-        res.status(500).json({ error: "Kunde inte skapa order" });
+         console.error("Fel vid radering av order:", error);
+         // Om modellen kastar "Order hittades inte" blir det 404, annars 500
+         if (error.message === "Order hittades inte") {
+             res.status(404).json({ error: error.message });
+         } else {
+             res.status(500).json({ error: "Kunde inte radera ordern." });
+         }
     }
 };
 
-// Hämta orderhistorik för en användare
-const getUserOrderHistory = async (req, res) => {
-    try {
-        const history = await getOrderHistory(req.params.userId);
-        if (history.length === 0) {
-            return res.status(404).json({ error: "Ingen orderhistorik hittades" });
-        }
-        res.json(history);
-    } catch (error) {
-        res.status(500).json({ error: "Kunde inte hämta orderhistorik" });
-    }
-};
-
-module.exports = { createNewOrder, getUserOrderHistory }; */
+module.exports = { createNewOrder, getUserOrderHistory, deleteExistingOrder }; // Exportera deleteExistingOrder
