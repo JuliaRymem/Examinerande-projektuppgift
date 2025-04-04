@@ -59,7 +59,7 @@ const createNewOrder = async (req, res) => {
     const totalAmount = detailedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     // Skapa ordern via modellen (skicka med UUID)
-    const orderResult = await createOrder(userId, productSummary, totalAmount, detailedItems);
+    const orderResult = await createNewOrder(userId, productSummary, totalAmount, detailedItems);
 
     res.status(201).json({
       message: "Order skapad.",
@@ -84,7 +84,7 @@ const getUserOrderHistory = async (req, res) => {
   }
 
   try {
-    const history = await getOrderHistory(userId); // Hämta via UUID
+    const history = await getUserOrderHistory(userId); // Hämta via UUID
     // Skicka tillbaka tom array om ingen historik finns (Model hanterar detta)
     res.json(history);
   } catch (error) {

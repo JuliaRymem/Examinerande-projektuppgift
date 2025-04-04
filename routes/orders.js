@@ -15,6 +15,6 @@ router.get("/history/:userId", getUserOrderHistory);
 // DELETE /order/:orderId - Ta bort en specifik order
 router.delete("/:orderId", deleteExistingOrder); // Lägg till delete-route
 
-module.exports = { createNewOrder, getUserOrderHistory, deleteExistingOrder }; // Exportera deleteExistingOrder
+//module.exports = { createNewOrder, getUserOrderHistory, deleteExistingOrder }; // Exportera deleteExistingOrder
 module.exports = router;
 

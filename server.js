@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 
 /* Hänvisar till databasfilen */
-const db = require("./database/database"); 
+const db = require("./database/database"); // BEHÖVS DENNA KODRAD?
 
 /* Importerar olika routemoduler */
 const menuRoutes = require("./routes/menuRoutes"); 
@@ -13,7 +13,7 @@ const orderRoutes = require("./routes/orders");
 const campaignRoutes = require("./routes/campaignRoutes"); 
 
 /* fil-system-modul (läsa, skriva, radera filer) */
-const fs = require("fs");
+const fs = require("fs"); // BEHÖVS DENNA KODRAD?
 
 /* Skapar en ny Express-app  */
 const app = express();
@@ -48,11 +48,3 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log(` 🟢 Servern körs på http://localhost:${PORT}`);
 });
-
-// OLD CODE, WHICH HAS BEEN REPLACED
-/*app.use('/', (req, res) => {res.send('Huvudsida');
-app.use("/campaign", (req, res, next) => {
-    console.log("Campaign route accessed");
-    next();
-}, campaignRoutes);
-});*/

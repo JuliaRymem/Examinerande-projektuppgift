@@ -1,4 +1,4 @@
-const { createNewOrder, getUserOrderHistory } = require("../models/orderModel");
+//onst { createNewOrder, getUserOrderHistory } = require("../models/orderModel");
 const db = require("../database/database"); 
 
 // Skapar en ny order i tabellen orders och sparar detaljer i order_items
