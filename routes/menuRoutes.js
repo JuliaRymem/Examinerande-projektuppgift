@@ -5,11 +5,8 @@ en databas. */
 
 /* Importerar nödvändiga moduler... */
 const express = require("express");
-/* För att läsa och skriva filer */
 const fs = require("fs");
-/* För att hantera fil- och mappvägar */
 const path = require("path");
-/* Skapar en router för HTTP-rutter */
 const router = express.Router();
 
 /* Sökvägen till menu.json */
@@ -40,7 +37,7 @@ router.get("/:id", (req, res) => {
         const menuData = JSON.parse(data);
         /* Läser menu.json och söker efter objektet med det ID:t */
         const item = menuData.menu.find((menuItem) => menuItem.id === itemId);
-        /* Om inget hittas så  skickas statuskoden "404 Item not found" */
+        /* Om inget hittas så skickas statuskoden "404 Item not found" */
         if (!item) {
             return res.status(404).json({ error: "Item not found" });
         }

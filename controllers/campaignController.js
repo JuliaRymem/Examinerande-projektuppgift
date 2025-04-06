@@ -1,4 +1,7 @@
-const db = require("../database/database");
+/* CRUD-funktioner för kampanjer */
+// Denna fil innehåller funktioner för att hantera kampanjer i databasen.
+// Importerar databasmodulen
+const db = require("../database/database"); 
 
 // Hämtar alla kampanjer
 const getAllCampaign = (req, res) => {
@@ -94,6 +97,7 @@ const restoreCampaign = (req, res) => {
     }
 };
 
+// Exporterar funktionerna så att de kan användas i andra filer 
 module.exports = {
     getAllCampaign,
     getCampaignById,

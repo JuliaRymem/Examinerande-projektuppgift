@@ -1,3 +1,4 @@
+// Importerar nödvändiga moduler
 const express = require("express");
 const router = express.Router();
 const campaignController = require("../controllers/campaignController");
@@ -20,5 +21,6 @@ router.delete("/:id", campaignController.softDeleteCampaign);
 // Återställer en kampanj
 router.patch("/:id/restore", campaignController.restoreCampaign);
 
+// Exporterar routern för att kunna användas i appen 
 module.exports = router;
 

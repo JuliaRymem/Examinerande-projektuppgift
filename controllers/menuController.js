@@ -1,6 +1,6 @@
 /* Den här filen är till för menyhanteringen, HTTP-förfrågningar, 
 anrop till databasen via menuModel, och skicka tillbaka svar till 
-klienten, Importerar MenuModel... */
+klienten, Importerar MenuModel...  CRUD = JA */
 const MenuModel = require('../models/menuModel');
 
 /* Hämtar alla menyalternativ */
@@ -68,7 +68,7 @@ const updateMenuItem = (req, res) => {
         const result = MenuModel.update(id, title, desc, price);
 
         result.changes ? res.json({ id: id, title, desc, price })
-                       : res.status(404).json({ error: "Produkten hittades inte eller inga ändringar gjordes" }); // Adjusted message
+                       : res.status(404).json({ error: "Produkten hittades inte eller inga ändringar gjordes" });  
     } catch (error) {
         console.error("Error in updateMenuItem:", error);
         res.status(500).json({ error: "Fel vid uppdatering av produkt." });
@@ -98,7 +98,7 @@ const restoreMenuItem = (req, res) => {
         const result = MenuModel.restore(req.params.id);
 
         result.changes ? res.json({ message: `Produkt med ID ${req.params.id} har återställts.` })
-                       : res.status(404).json({ error: "Produkten hittades inte eller var inte borttagen" }); // Adjusted message
+                       : res.status(404).json({ error: "Produkten hittades inte eller var inte borttagen" }); 
     } catch (error) {
         console.error("Error in restoreMenuItem:", error);
         res.status(500).json({ error: "Fel vid återställning av produkt." });

@@ -1,3 +1,4 @@
+// Importerar en databasanslutning 
 const db = require("../database/database");
 
 const createUser = (id, username, hashedPassword) => {
@@ -46,15 +47,12 @@ const deleteUserById = (id) => {
 }
 };
 
-
+// funktioner
+// createUser() Lägger till en ny användare
+// findUserByUsername() Hämtar en användare baserat på användarnamn
+// DeleteUserById() Tar bort både användaren och dess ordrar (viktigt för datarensning)
 module.exports = {
   createUser,
   findUserByUsername,
   deleteUserById,
 };
-
-
-//funktioner
-//createUser() Lägger till en ny användare
-// findUserByUsername() Hämtar en användare baserat på användarnamn
-//DeleteUserById() Tar bort både användaren och dess ordrar (viktigt för datarensning)

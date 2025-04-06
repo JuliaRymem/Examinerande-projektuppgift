@@ -1,3 +1,4 @@
+// Importerar en databasanslutning 
 const db = require("../database/database");
 
 // Skapar en ny order i databasen och lägger till order_items

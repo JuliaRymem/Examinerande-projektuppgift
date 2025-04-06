@@ -1,3 +1,4 @@
+// Importerar nödvändiga moduler och databasanslutning 
 const db = require("../database/database");
 const { validate: validateUUID } = require("uuid");
 const { createNewOrder: createOrderModel, getUserOrderHistory: getOrderHistoryModel, deleteOrder } = require("../models/ordermodel");
@@ -107,5 +108,6 @@ const deleteExistingOrder = async (req, res) => {
     }
 };
 
+// Exporterar funktionerna för användning i routes
 module.exports = { createNewOrder, getUserOrderHistory, deleteExistingOrder };
 

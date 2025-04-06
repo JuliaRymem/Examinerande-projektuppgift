@@ -1,8 +1,9 @@
+// Importerar nödvändiga moduler
 const db = require("../database/database");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 
-// Skapa en ny användare
+// Skapar en ny användare
 const createUser = async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -10,23 +11,23 @@ const createUser = async (req, res) => {
         return res.status(400).json({ error: "Alla fält måste fyllas i." });
     }
 
-    // Kontrollera e-postformat
+    // Kontrollerar e-postformat
     const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return res.status(400).json({ error: "Ogiltig e-postadress." });
     }
 
-    // Kontrollera att lösenordet är minst 10 tecken långt
+    // Kontrollerar att lösenordet är minst 10 tecken långt
     if (password.length < 10) {
         return res.status(400).json({ error: "Lösenordet måste vara minst 10 tecken långt." });
     }
 
     try {
-        // Hasha lösenordet
+        // Hashar lösenordet
         const hashedPassword = await bcrypt.hash(password, 10);
         const userId = uuidv4(); // Skapa UUID
 
-        // Infoga i databasen
+        // Infogar i databasen
         const stmt = db.prepare(`
             INSERT INTO users (id, name, email, password)
             VALUES (?, ?, ?, ?)
@@ -39,7 +40,7 @@ const createUser = async (req, res) => {
     }
 };
 
-// Hämta alla användare
+// Hämtar alla användare
 const getAllUsers = (req, res) => {
     try {
         const users = db.prepare("SELECT id, name, email, created_at FROM users").all();
@@ -49,7 +50,7 @@ const getAllUsers = (req, res) => {
     }
 };
 
-// Hämta en användare via ID
+// Hämtar en användare via ID
 const getUserById = (req, res) => {
     const userId = req.params.id;
     try {
@@ -62,7 +63,7 @@ const getUserById = (req, res) => {
     }
 };
 
-// Uppdatera en användare
+// Uppdaterar en användare
 const updateUser = (req, res) => {
     const userId = req.params.id;
     const { name, email } = req.body;
@@ -85,7 +86,7 @@ const updateUser = (req, res) => {
     }
 };
 
-// Ta bort en användare
+// Tar bort en användare
 const deleteUser = (req, res) => {
     const userId = req.params.id;
     try {
@@ -98,5 +99,6 @@ const deleteUser = (req, res) => {
     }
 };
 
+// Exportera funktionerna för användning i routes 
 module.exports = { createUser, getAllUsers, getUserById, updateUser, deleteUser };
 

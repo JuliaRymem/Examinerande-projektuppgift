@@ -1,22 +1,23 @@
+// Importerar nödvändiga moduler
 const express = require('express');
 const app = express();
 
 // Läser in JSON-data från inkommande förfrågningar
 app.use(express.json());
 
-// Global logging-middleware
+// Middleware för att logga inkommande förfrågningar
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()}: ${req.method} ${req.originalUrl}`);
   next();
 });
 
-// Importera routes
-const ordersRouter = require('./routes/Orders');
-const usersRouter = require('./routes/UserRoutes'); // r
-const menuRouter = require('./routes/MenuRoutes'); // r
-const campaignRouter = require('./routes/CampaignRoutes'); // r
+// Importerar routes
+const ordersRouter = require('./routes/orders');
+const usersRouter = require('./routes/userRoutes');
+const menuRouter = require('./routes/menuRoutes');
+const campaignRouter = require('./routes/campaignRoutes');
 
-// Använd routes
+// Använder routes
 app.use('/order', ordersRouter);
 app.use('/users', usersRouter);
 app.use('/menu', menuRouter);

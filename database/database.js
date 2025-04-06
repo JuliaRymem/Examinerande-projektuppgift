@@ -1,8 +1,9 @@
+// Skapar en SQLite-databas med Better-SQLite3 och definierar tabeller för användare, menyer, kampanjer och beställningar
 const Database = require("better-sqlite3");
 const path = require("path");
 const db = new Database(path.join(__dirname, "database.db"), { verbose: console.log });
 
-// Skapa tabeller om de inte redan finns
+// Skapar tabeller om de inte redan finns
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
@@ -50,4 +51,5 @@ db.exec(`
   );
 `);
 
-module.exports = db;
+// Exporterar databasen för att använda den i andra filer
+module.exports = db; 

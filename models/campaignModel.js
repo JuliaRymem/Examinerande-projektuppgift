@@ -14,4 +14,5 @@ const getCampaignByProduct = (productId) => {
   return db.prepare("SELECT * FROM campaigns WHERE productId = ? AND isActive = 1").get(productId);
 };
 
+// Exporterar funktionerna så att de kan användas i andra delar av applikationen 
 module.exports = { getActiveCampaign, getCampaignByProduct };
