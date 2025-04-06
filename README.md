@@ -217,11 +217,11 @@ tillföra."
 
 ## Projektmedlemmar och kontaktuppgifter
 ### Daniel Akestam
-- **GitHub**:
+- **GitHub**: [Luckmore83] (https://github.com/Luckmore83)
 ### Julia Rasmusson
-- **GitHub**:
+- **GitHub**: [JuliaRymem] (https://github.com/JuliaRymem)
 ### Daniel Arvebäck
-- **GitHub**:
+- **GitHub**: [Danielarveb] (https://github.com/Danielarveb)
 ### Tobias Thor
 - **GitHub**: [Tobias-Thor](https://github.com/Tobias-Thor)
 - **LinkedIn**: [Tobias Thor](https://www.linkedin.com/in/tobias-thor-810215182/)
