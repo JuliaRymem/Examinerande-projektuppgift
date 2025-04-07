@@ -1,18 +1,18 @@
-// Hanterar databaslogik för kampanjer
+// Importerar nödvändiga moduler och databasen 
 const db = require("../database/database");
 
-// Funktioner för att hämta kampanjer från databasen
-// Hämtar alla kampanjer där "isActive" är 1 (aktiva kampanjer)
-const getActiveCampaign = () => {
-  return db.prepare("SELECT * FROM campaigns WHERE isActive = 1").all(); 
-
+// Hämtar aktiva kampanjer från databasen 
+const getActiveCampaign = () => { //
+  return db.prepare("SELECT * FROM campaigns WHERE isActive = 1").all();
 };
 
-// Hämtar kampanj för en specifik produkt
-// Letar efter en kampanj där produkt-ID matchar och kampanjen är aktiv
+// Hämtar kampanj för en specifik produkt 
 const getCampaignByProduct = (productId) => {
   return db.prepare("SELECT * FROM campaigns WHERE productId = ? AND isActive = 1").get(productId);
 };
 
 // Exporterar funktionerna så att de kan användas i andra delar av applikationen 
 module.exports = { getActiveCampaign, getCampaignByProduct };
+
+
+

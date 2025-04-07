@@ -1,12 +1,11 @@
-// Importerar en databasanslutning 
+// Importerar nödvändiga moduler och databasanslutning 
 const db = require("../database/database");
 
-// Skapar en ny order i databasen och lägger till order_items
+// Skapar en ny order i databasen och lägger till order_items 
 const createNewOrder = (user_id, productSummary, totalAmount, items) => {
   return new Promise((resolve, reject) => {
-    const orderStmt = db.prepare("INSERT INTO orders (user_id, product, amount) VALUES (?, ?, ?)");
-    let orderResult;
     try {
+      const orderStmt = db.prepare("INSERT INTO orders (user_id, product, amount) VALUES (?, ?, ?)");
       const numericTotalAmount = parseFloat(totalAmount);
       if (isNaN(numericTotalAmount)) {
         throw new Error("Totalbeloppet är ogiltigt.");
@@ -14,50 +13,30 @@ const createNewOrder = (user_id, productSummary, totalAmount, items) => {
       if (!user_id || typeof user_id !== "string") {
         throw new Error("user_id (UUID) saknas eller har fel format.");
       }
-      orderResult = orderStmt.run(user_id, productSummary, numericTotalAmount);
-    } catch (err) {
-      console.error("Fel vid infogning i orders:", err);
-      if (err.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
-        return reject(new Error(`Användaren med ID ${user_id} finns inte.`));
+      const orderResult = orderStmt.run(user_id, productSummary, numericTotalAmount);
+      const orderId = orderResult.lastInsertRowid;
+      if (!orderId) {
+        throw new Error("Kunde inte hämta orderId efter skapande.");
       }
-      return reject(new Error("Kunde inte skapa order (steg 1)."));
-    }
-
-    const orderId = orderResult.lastInsertRowid;
-    if (!orderId) {
-      return reject(new Error("Kunde inte hämta orderId efter skapande."));
-    }
-
-    const itemStmt = db.prepare("INSERT INTO order_items (order_id, product_id, quantity, price_at_order) VALUES (?, ?, ?, ?)");
-    try {
-      // Använd en transaktion för att infoga alla order_items
+      const itemStmt = db.prepare("INSERT INTO order_items (order_id, product_id, quantity, price_at_order) VALUES (?, ?, ?, ?)");
       db.transaction(() => {
         items.forEach(item => {
           const numericPrice = parseFloat(item.price);
           if (isNaN(numericPrice)) {
             throw new Error(`Ogiltigt pris för produkt ${item.id}.`);
           }
-          if (!item.id || typeof item.id !== "number") {
-            throw new Error(`Produkt-ID måste vara ett nummer. (Fick: ${item.id})`);
-          }
           itemStmt.run(orderId, item.id, item.quantity, numericPrice);
         });
       })();
+      resolve({ orderId, productSummary, totalAmount });
     } catch (err) {
-      console.error("Fel vid infogning av order-items:", err);
-      try {
-        db.prepare("DELETE FROM orders WHERE id = ?").run(orderId);
-      } catch (cleanupErr) {
-        console.error("Kunde inte städa upp misslyckad order:", cleanupErr);
-      }
-      return reject(new Error("Fel vid infogning av order-items."));
+      console.error("Error in createNewOrder:", err);
+      reject(err);
     }
-
-    resolve({ orderId, productSummary, totalAmount });
   });
 };
 
-// Hämtar orderhistorik för en användare baserat på user_id
+// Hämtar orderhistorik för en användare baserat på user_id 
 const getUserOrderHistory = (user_id) => {
   return new Promise((resolve, reject) => {
     const query = `
@@ -100,7 +79,6 @@ const getUserOrderHistory = (user_id) => {
         });
         return acc;
       }, []);
-
       resolve(history);
     } catch (error) {
       console.error("Fel vid databashämtning av orderhistorik:", error);
@@ -109,7 +87,7 @@ const getUserOrderHistory = (user_id) => {
   });
 };
 
-// Raderar en order (och dess order_items via CASCADE)
+// Raderar en order (och dess order_items via CASCADE) 
 const deleteOrder = (orderId) => {
   return new Promise((resolve, reject) => {
     try {
@@ -127,6 +105,6 @@ const deleteOrder = (orderId) => {
   });
 };
 
+// Exporterar funktionerna för orderhantering 
 module.exports = { createNewOrder, getUserOrderHistory, deleteOrder };
-
 

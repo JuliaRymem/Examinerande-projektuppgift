@@ -1,47 +1,53 @@
 # Airbean API
 
 ## Beskrivning
-Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att hantera en meny med kaffedrycker. API:et möjliggör CRUD-operationer (Create, Read, Update, Delete) samt "soft delete"-funktionalitet. Det innehåller också kampanjhantering för att erbjuda rabatter baserat på specifika regler. Dessutom hanterar API:et användarhantering och orderhistorik.
+Airbean API är ett REST API byggt med Express.js och better-sqlite3 för att hantera en meny med kaffedrycker. API:et möjliggör CRUD-operationer (Create, Read, Update, Delete) samt "soft delete"-funktionalitet (för menyn). Det innehåller också kampanjhantering för att erbjuda rabatter baserat på specifika regler. Dessutom hanterar API:et användarhantering och orderhistorik, och även validering via middleware för att säkerställa att inkommande data är korrekt formaterad.
 
 ---
 
 ## Funktioner
+
+### Meny:
 - Hämta hela menyn
 - Hämta en specifik produkt
-- Lägga till en ny produkt
-- Uppdatera en befintlig produkt
-- Ta bort en produkt (soft delete)
-- Återställa en borttagen produkt
+- Lägga till, uppdatera och ta bort (soft delete) produkter
+- Återställa borttagna produkter
+
+### Kampanjer:
 - Hämta aktiva kampanjer
-- Applicera kampanjer på en varukorg
-- Hantera användare (skapa, hämta, uppdatera och ta bort användare)
-- Hantera ordrar (skapa och hämta orderhistorik)
+- Skapa, uppdatera och inaktivera kampanjer
+- Möjlighet att applicera kampanjrabatter vid orderläggning
+
+### Användare:
+- Skapa nya användarkonton med slumpgenererat användar-ID (UUID)
+- Hämta, uppdatera och ta bort användare
+- Orderhistorik hämtas via användar-ID
+
+### Ordrar:
+- Skapa nya ordrar med full validering av produkter, kvantitet och pris
+- Hämta orderhistorik för en användare
+- Radera en order
   
 ---
 
 ## Middleware
-API:et använder en middleware för att logga alla inkommande requests samt en autentiseringsmiddleware för att begränsa åtkomst till vissa sidor.
+API:et använder flera middleware-komponenter:
 
 ### Logging Middleware
-Loggar alla inkommande förfrågningar med tidsstämpel.
+Loggar alla inkommande förfrågningar (requests) med tidsstämpel.
 
 ```function middleware(req, res, next) {
     console.log(`${new Date().toISOString()}: ${req.originalUrl}`);
     next();
 }
 ```
-### Autentiseringsmiddleware
-Begränsar åtkomst till vissa endpoints baserat på query-parametern admin=true.
 
-```function authAccess(req, res, next) {
-    if (req.query.admin === 'true') {
-        req.admin = true;    
-        next();
-    } else {
-        res.send('Fel: Du måste vara en admin');
-    }
-}
-```
+### Valideringsmiddleware
+Olika middleware-funktioner säkerställer att data i URL och body är korrekt formaterad, t.ex. att:
+
+- Alla nödvändiga fält (t.ex. namn, email, lösenord) är ifyllda vid användarskapande.
+- Ordern innehåller giltiga produkt-ID:n, kvantiteter och priser.
+- Endast produkter som finns i menyn kan läggas till i en order.
 
 ## Teknologier
 - **Node.js** (Backend-runtime)
@@ -49,6 +55,10 @@ Begränsar åtkomst till vissa endpoints baserat på query-parametern admin=true
 - **better-sqlite3** (Databashantering)
 - **cors** (Cross-Origin Resource Sharing)
 - **nodemon** (Utvecklingsverktyg)
+- **curl** (CLI-verktyg)
+- **bcrypt** (Krypteringsverktyg)
+- **uuidv4** (För hashade lösenord)
+- **body-parser** (Middleware-paket)
 
 ---
 
@@ -89,6 +99,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 ## API-Endpoints
 
 ### Hämta hela menyn
+
 **GET** `/menu`
 
 **Svarsexempel:**
@@ -106,6 +117,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 ---
 
 ### Hämta en specifik produkt
+
 **GET** `/menu/:id`
 
 **Svarsexempel:**
@@ -121,6 +133,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 ---
 
 ### Lägga till en ny produkt
+
 **POST** `/menu`
 
 **Body (JSON):**
@@ -135,6 +148,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 ---
 
 ### Uppdatera en produkt
+
 **PUT** `/menu/:id`
 
 **Body (JSON):**
@@ -149,6 +163,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 ---
 
 ### Ta bort en produkt (soft delete)
+
 **DELETE** `/menu/:id`
 
 **Svarsexempel:**
@@ -161,7 +176,8 @@ Nu kan du använda API:et via `http://localhost:3000/`
 ---
 
 ### Återställa en borttagen produkt
-**PUT** `/menu/restore/:id`
+
+**PATCH** `/menu/:id/restore`
 
 **Svarsexempel:**
 ```json
@@ -174,7 +190,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 ### Hämta aktiva kampanjer
 
-**GET** /campaigns
+**GET** /campaign
 
 **Svarsexempel:**
 [
@@ -188,42 +204,152 @@ Nu kan du använda API:et via `http://localhost:3000/`
   }
 ]
 ```
+### Skapa en ny kampanj
 
-### Hantera ordrar
-Skapa en ny order
+**POST** /campaign
 
-```POST /create```
+**Svarsexempel:**
+[
+```{
+  "title": "Ny kampanj",
+  "discount": 20,
+  "productId": 2,
+  "startDate": "2025-06-01",
+  "endDate": "2025-06-30"
+}
+]
+```
 
-Hämta orderhistorik för en användare
+### Uppdatera en kampanj
 
-```GET /history/:userId```
+**PUT** /campaign/:id
+
+**Svarsexempel:**
+
+[
+```{
+  "title": "Uppdaterad kampanj",
+  "discount": 25,
+  "productId": 2,
+  "startDate": "2025-06-01",
+  "endDate": "2025-06-30",
+  "isActive": 1
+}
+]
+```
+
+### Inaktivera (ta bort) en kampanj
+
+**DELETE** /campaign/:id
+
+**Svarsexempel:**
+
+[
+```{
+  "message": "Kampanj inaktiverad (borttagen)!"
+}
+]
+```
+
+### Hämta alla användare
+
+**GET** /users
+- Hämta en specifik användare
+
+**GET** /users/:id
+- Uppdatera en användare
+
+**PUT** /users/:id
+
+**Svarsexempel:**
+
+[
+```{
+  "name": "Uppdaterat Namn",
+  "email": "nyemail@example.com"
+}
+]
+```
+
+### Ta bort en användare
+
+**DELETE** /users/:id
+
+
+### Skapa en ny order
+
+**POST** /order/create
+
+**Svarsexempel:**
+
+[
+```{
+  "userId": "user-uuid",
+  "items": [
+    {
+      "id": 1,
+      "quantity": 2,
+      "price": 39
+    }
+  ]
+}
+]
+```
+
+### Hämta orderhistorik för en användare
+
+**GET** /order/history/:userId
+
+### Radera en order
+
+**DELETE** /order/:orderId
 
 ---
 
 ## Databas
 API:et använder SQLite via better-sqlite3 och har följande tabeller:
--users (för användarhantering)
--orders (för orderhistorik)
--menu (för kaffemenyn)
+
+### Tabeller
+- users (för användarhantering)
+- menu (för kaffemenyn)
+- campaigns (kampanjer med rabatter)
+- orders (för orderhistorik)
+- order_items – (detaljer per order, koppling mellan order och produkter)
 
 ---
 
-## Websockets - En diskussion
--"Om ni skulle implementera websockets i detta projekt, beskriv vilken
-funktionalitet det skulle ge användaren och vilket mervärde det skulle
-tillföra."
+## WebSockets – En diskussion om Funktionalitet och mervärde i projektet
+Om vi skulle implementerat WebSockets i vårt projekt, skulle det möjliggöra kommunikation i realtid mellan servern och klienten. Det hade inneburit att vi kunnat skicka och ta emot data direkt, utan att användaren behövt uppdatera sidan eller skicka nya HTTP-förfrågningar.
+
+### Exempel på funktionalitet:
+
+- **Uppdatering av orderstatus:** När en användare har lagt en beställning skulle de kunna se orderstatus uppdateras i realtid, exempelvis "Mottagen", "Tillagas" och "Redo att hämtas". Användaren slipper ladda om sidan eller trycka på uppdatera.
+- **Notiser vid kampanjer:** Nya kampanjer skulle kunna skickas ut direkt till alla användare som är inne i appen.
+- **Lageruppdateringar:** Om en produkt tillfälligt tar slut, skulle användare få direkt information om detta under beställningsprocessen.
+- **Chattfunktionalitet:** WebSockets skulle kunna användas för att bygga en chattfunktion där kunder kan få direkt hjälp från supporten.
+
+### Mervärde
+
+Att implementera WebSockets i projektet skulle kunna ge flera fördelar för användaren. För det första skulle det skapa en bättre användarupplevelse – som användare slipper man uppdatera sidan manuellt och får en mer interaktiv och dynamisk upplevelse där information kan uppdateras i realtid. Det skulle också ge en effektivare orderhantering, då orderstatus kan följas och uppdateras utan fördröjning.
+
+Det kan också bidra till en snabbare kundsupport genom möjligheten att erbjuda en ”direktchatt”. Notiser om kampanjer eller erbjudanden skulle kunna bidra till ökad försäljning. Det kan öka engagemanget och leda till att användaren snabbare kan ta del av aktuella rabatter.
 
 ---
 
 ## Projektmedlemmar och kontaktuppgifter
 ### Daniel Akestam
-- **GitHub**: [Luckmore83] (https://github.com/Luckmore83)
+- **GitHub**: [Luckmore83](https://github.com/Luckmore83)
 ### Julia Rasmusson
-- **GitHub**: [JuliaRymem] (https://github.com/JuliaRymem)
+- **GitHub**: [JuliaRymem](https://github.com/JuliaRymem)
 ### Daniel Arvebäck
-- **GitHub**: [Danielarveb] (https://github.com/Danielarveb)
+- **GitHub**: [Danielarveb](https://github.com/Danielarveb)
 ### Tobias Thor
 - **GitHub**: [Tobias-Thor](https://github.com/Tobias-Thor)
 - **LinkedIn**: [Tobias Thor](https://www.linkedin.com/in/tobias-thor-810215182/)
 - **E-post**: [tobiasthor@protonmail.com](mailto:tobiasthor@protonmail.com)
+
+---
+
+Denna README-fil är tänkt att fungera som en tydlig guide för utvecklare och användare av API:et, 
+med uppdaterade endpoints och beskrivningar som motsvarar den nuvarande implementationen.
 

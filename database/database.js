@@ -3,7 +3,7 @@ const Database = require("better-sqlite3");
 const path = require("path");
 const db = new Database(path.join(__dirname, "database.db"), { verbose: console.log });
 
-// Skapar tabeller om de inte redan finns
+// Skapar tabeller om de inte redan finns 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
@@ -13,7 +13,7 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
-  
+
   CREATE TABLE IF NOT EXISTS menu (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
@@ -21,16 +21,17 @@ db.exec(`
     price INTEGER NOT NULL,
     is_deleted BOOLEAN DEFAULT FALSE
   );
-  
+
   CREATE TABLE IF NOT EXISTS campaigns (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,  
-    name TEXT NOT NULL,                   
-    productId INTEGER NOT NULL,           
-    discountType TEXT NOT NULL,            
-    discountValue INTEGER NOT NULL,        
-    isActive INTEGER DEFAULT 1             
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    discount INTEGER NOT NULL,
+    productId INTEGER NOT NULL,
+    startDate TEXT,
+    endDate TEXT,
+    isActive INTEGER DEFAULT 1
   );
-  
+
   CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id TEXT NOT NULL,
@@ -39,7 +40,7 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
-  
+
   CREATE TABLE IF NOT EXISTS order_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     order_id INTEGER NOT NULL,
@@ -51,5 +52,5 @@ db.exec(`
   );
 `);
 
-// Exporterar databasen för att använda den i andra filer
-module.exports = db; 
+// Exporterar databasen för att använda den i andra filer 
+module.exports = db;
