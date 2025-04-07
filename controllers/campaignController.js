@@ -1,7 +1,7 @@
 // Denna fil innehåller CRUD-funktioner för kampanjer i databasen 
 const db = require("../database/database");
 
-// Importerar nödvändiga moduler och databasanslutning 
+// Hämtar alla kampanjer från tabellen campaigns
 const getAllCampaign = (req, res) => {
   try {
     const campaigns = db.prepare("SELECT * FROM campaigns WHERE isActive = 1").all();
@@ -61,7 +61,7 @@ const updateCampaign = (req, res) => {
   }
 };
 
-// Mjuk borttagning (isActive = 0 istället för DELETE)
+// "Mjuk" borttagning av kampanj (isActive = 0 istället för DELETE)
 const softDeleteCampaign = (req, res) => {
   const campaignId = parseInt(req.params.id, 10);
   try {
