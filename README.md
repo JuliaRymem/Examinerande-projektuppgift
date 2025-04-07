@@ -149,7 +149,8 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **PUT** `/menu/:id`
 
-```{
+```json
+{
   "title": "Uppdaterat namn",
   "desc": "Ny beskrivning",
   "price": 50
@@ -190,7 +191,8 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **Svarsexempel:**
 
-```{
+```json
+  {
     "id": 1,
     "name": "Köp 2 bryggkaffe, få en gratis",
     "productId": 1,
@@ -205,7 +207,8 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **Svarsexempel:**
 
-```{
+```json
+  {
   "title": "Ny kampanj",
   "discount": 20,
   "productId": 2,
@@ -221,7 +224,8 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```{
+```json
+  {
   "title": "Uppdaterad kampanj",
   "discount": 25,
   "productId": 2,
@@ -238,7 +242,8 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```{
+```json
+{
   "message": "Kampanj inaktiverad (borttagen)!"
 }
 ```
@@ -256,7 +261,8 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```{
+```json
+{
   "name": "Uppdaterat Namn",
   "email": "nyemail@example.com"
 }
@@ -274,7 +280,8 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```{
+```json
+{
   "userId": "user-uuid",
   "items": [
     {
