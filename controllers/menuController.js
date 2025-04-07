@@ -1,6 +1,7 @@
 // Denna fil innehåller alla funktioner för att hantera menyobjekt. 
 const MenuModel = require('../models/menuModel');
 
+// Hämtar alla menyföremål
 const getAllMenuItems = (req, res) => {
   try {
     const menu = MenuModel.getAll();
@@ -25,7 +26,7 @@ const getMenuItemById = (req, res) => {
   }
 };
 
-// Skapar ett nytt menyalternativ 
+// Skapar en ny produkt på menylistan. 
 const createMenuItem = (req, res) => {
   const { title, desc, price } = req.body;
   try {
