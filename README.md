@@ -36,7 +36,8 @@ API:et använder flera middleware-komponenter:
 ### Logging Middleware
 Loggar alla inkommande förfrågningar (requests) med tidsstämpel.
 
-```function middleware(req, res, next) {
+```js
+    function middleware(req, res, next) {
     console.log(`${new Date().toISOString()}: ${req.originalUrl}`);
     next();
 }
