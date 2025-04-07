@@ -1,3 +1,5 @@
+// Denna fil innehåller funktioner för att hämta kampanjer från databasen
+
 // Importerar nödvändiga moduler och databasen 
 const db = require("../database/database");
 
