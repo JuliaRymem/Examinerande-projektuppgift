@@ -341,6 +341,7 @@ Det kan också bidra till en snabbare kundsupport genom möjligheten att erbjuda
 ## Projektmedlemmar och kontaktuppgifter
 ### Daniel Akestam
 - **GitHub**: [Luckmore83](https://github.com/Luckmore83)
+- **E-post**: [daaksve@gmail.com](mailto:daaksve@gmail.com)
 ### Julia Rasmusson
 - **GitHub**: [JuliaRymem](https://github.com/JuliaRymem)
 ### Daniel Arvebäck
