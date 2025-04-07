@@ -36,8 +36,7 @@ API:et använder flera middleware-komponenter:
 ### Logging Middleware
 Loggar alla inkommande förfrågningar (requests) med tidsstämpel.
 
-```
-function middleware(req, res, next) {
+```function middleware(req, res, next) {
     console.log(`${new Date().toISOString()}: ${req.originalUrl}`);
     next();
 }
@@ -150,8 +149,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **PUT** `/menu/:id`
 
-```
-{
+```{
   "title": "Uppdaterat namn",
   "desc": "Ny beskrivning",
   "price": 50
@@ -192,8 +190,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **Svarsexempel:**
 
-```
-  {
+```{
     "id": 1,
     "name": "Köp 2 bryggkaffe, få en gratis",
     "productId": 1,
@@ -208,8 +205,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **Svarsexempel:**
 
-```
-  {
+```{
   "title": "Ny kampanj",
   "discount": 20,
   "productId": 2,
@@ -225,8 +221,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```
-  {
+```{
   "title": "Uppdaterad kampanj",
   "discount": 25,
   "productId": 2,
@@ -243,8 +238,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```
-  {
+```{
   "message": "Kampanj inaktiverad (borttagen)!"
 }
 ```
@@ -262,8 +256,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```
-  {
+```{
   "name": "Uppdaterat Namn",
   "email": "nyemail@example.com"
 }
@@ -281,8 +274,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```
-  {
+```{
   "userId": "user-uuid",
   "items": [
     {
@@ -344,6 +336,7 @@ Det kan också bidra till en snabbare kundsupport genom möjligheten att erbjuda
 - **E-post**: [juliakrasmusson@hotmail.com](mailto:juliakrasmusson@hotmail.com)
 ### Daniel Arvebäck
 - **GitHub**: [Danielarveb](https://github.com/Danielarveb)
+- **E-post**: [daniel.arveback03@gmail.com](mailto:daniel.arveback03@gmail.com)
 ### Tobias Thor
 - **GitHub**: [Tobias-Thor](https://github.com/Tobias-Thor)
 - **LinkedIn**: [Tobias Thor](https://www.linkedin.com/in/tobias-thor-810215182/)
