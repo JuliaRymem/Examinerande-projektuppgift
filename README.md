@@ -36,7 +36,8 @@ API:et använder flera middleware-komponenter:
 ### Logging Middleware
 Loggar alla inkommande förfrågningar (requests) med tidsstämpel.
 
-```function middleware(req, res, next) {
+```
+function middleware(req, res, next) {
     console.log(`${new Date().toISOString()}: ${req.originalUrl}`);
     next();
 }
@@ -149,6 +150,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **PUT** `/menu/:id`
 
+```
 {
   "title": "Uppdaterat namn",
   "desc": "Ny beskrivning",
@@ -190,7 +192,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **Svarsexempel:**
 
-```[
+```
   {
     "id": 1,
     "name": "Köp 2 bryggkaffe, få en gratis",
@@ -199,7 +201,6 @@ Nu kan du använda API:et via `http://localhost:3000/`
     "discountValue": 100,
     "isActive": 1
   }
-]
 ```
 ### Skapa en ny kampanj
 
@@ -207,15 +208,14 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **Svarsexempel:**
 
-```[
+```
   {
   "title": "Ny kampanj",
   "discount": 20,
   "productId": 2,
   "startDate": "2025-06-01",
   "endDate": "2025-06-30"
-}
-]
+  }
 ```
 
 ### Uppdatera en kampanj
@@ -225,7 +225,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```[
+```
   {
   "title": "Uppdaterad kampanj",
   "discount": 25,
@@ -233,8 +233,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
   "startDate": "2025-06-01",
   "endDate": "2025-06-30",
   "isActive": 1
-}
-]
+  }
 ```
 
 ### Inaktivera (ta bort) en kampanj
@@ -244,11 +243,10 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```[
+```
   {
   "message": "Kampanj inaktiverad (borttagen)!"
 }
-]
 ```
 
 ### Hämta alla användare
@@ -264,12 +262,11 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```[ 
+```
   {
   "name": "Uppdaterat Namn",
   "email": "nyemail@example.com"
 }
-]
 ```
 
 ### Ta bort en användare
@@ -284,7 +281,7 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **Svarsexempel:**
 
 
-```[
+```
   {
   "userId": "user-uuid",
   "items": [
@@ -295,7 +292,6 @@ Nu kan du använda API:et via `http://localhost:3000/`
     }
   ]
 }
-]
 ```
 
 ### Hämta orderhistorik för en användare
