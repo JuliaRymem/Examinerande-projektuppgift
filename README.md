@@ -340,6 +340,8 @@ Det kan också bidra till en snabbare kundsupport genom möjligheten att erbjuda
 - **E-post**: [daaksve@gmail.com](mailto:daaksve@gmail.com)
 ### Julia Rasmusson
 - **GitHub**: [JuliaRymem](https://github.com/JuliaRymem)
+- **LinkedIn**: [Julia Rasmusson](www.linkedin.com/in/juliarasmusson)
+- **E-post**: [juliakrasmusson@hotmail.com](mailto:juliakrasmusson@hotmail.com)
 ### Daniel Arvebäck
 - **GitHub**: [Danielarveb](https://github.com/Danielarveb)
 ### Tobias Thor
