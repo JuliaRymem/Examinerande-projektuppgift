@@ -57,7 +57,7 @@ Olika middleware-funktioner säkerställer att data i URL och body är korrekt f
 - **nodemon** (Utvecklingsverktyg)
 - **curl** (CLI-verktyg)
 - **bcrypt** (Krypteringsverktyg)
-- **uuidv4** (För hashade lösenord)
+- **uuidv4** (För slumpgenereade användar-id)
 - **body-parser** (Middleware-paket)
 
 ---
@@ -74,12 +74,12 @@ Innan du börjar, se till att du har följande installerat:
 
 ### 1. Klona detta repository:
 ```sh
-   git clone https://github.com/Tobias-Thor/Airbean-API.git
+   git clone https://github.com/JuliaRymem/Examinerande-projektuppgift
 ```
 
 ### 2. Navigera till projektmappen:
 ```sh
-   cd Airbean-API
+   cd Examinerande-projektuppgift
 ```
 
 ### 3. Installera beroenden:
@@ -135,8 +135,6 @@ Nu kan du använda API:et via `http://localhost:3000/`
 ### Lägga till en ny produkt
 
 **POST** `/menu`
-
-**Body (JSON):**
 ```json
 {
   "title": "Espresso",
@@ -151,8 +149,6 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **PUT** `/menu/:id`
 
-**Body (JSON):**
-```json
 {
   "title": "Uppdaterat namn",
   "desc": "Ny beskrivning",
@@ -193,8 +189,9 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **GET** /campaign
 
 **Svarsexempel:**
-[
-```{
+
+```[
+  {
     "id": 1,
     "name": "Köp 2 bryggkaffe, få en gratis",
     "productId": 1,
@@ -209,8 +206,9 @@ Nu kan du använda API:et via `http://localhost:3000/`
 **POST** /campaign
 
 **Svarsexempel:**
-[
-```{
+
+```[
+  {
   "title": "Ny kampanj",
   "discount": 20,
   "productId": 2,
@@ -226,8 +224,9 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **Svarsexempel:**
 
-[
-```{
+
+```[
+  {
   "title": "Uppdaterad kampanj",
   "discount": 25,
   "productId": 2,
@@ -244,8 +243,9 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **Svarsexempel:**
 
-[
-```{
+
+```[
+  {
   "message": "Kampanj inaktiverad (borttagen)!"
 }
 ]
@@ -263,8 +263,9 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **Svarsexempel:**
 
-[
-```{
+
+```[ 
+  {
   "name": "Uppdaterat Namn",
   "email": "nyemail@example.com"
 }
@@ -282,8 +283,9 @@ Nu kan du använda API:et via `http://localhost:3000/`
 
 **Svarsexempel:**
 
-[
-```{
+
+```[
+  {
   "userId": "user-uuid",
   "items": [
     {
@@ -318,7 +320,7 @@ API:et använder SQLite via better-sqlite3 och har följande tabeller:
 
 ---
 
-## WebSockets – En diskussion om Funktionalitet och mervärde i projektet
+## WebSockets – En diskussion om funktionalitet och mervärde i projektet
 Om vi skulle implementerat WebSockets i vårt projekt, skulle det möjliggöra kommunikation i realtid mellan servern och klienten. Det hade inneburit att vi kunnat skicka och ta emot data direkt, utan att användaren behövt uppdatera sidan eller skicka nya HTTP-förfrågningar.
 
 ### Exempel på funktionalitet:
