@@ -1,4 +1,4 @@
-// controllers/userController.js
+// Importerar nödvändiga moduler och databasen 
 const db = require("../database/database");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");

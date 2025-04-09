@@ -13,7 +13,7 @@ app.use((req, res, next) => {
 });
 
 // Importerar routes 
-const orderRoutes = require('./routes/orders'); // Ny kod 
+const orderRoutes = require('./routes/orders');  
 const ordersRouter = require('./routes/orders');
 const usersRouter = require('./routes/userRoutes');
 const menuRouter = require('./routes/menuRoutes');
