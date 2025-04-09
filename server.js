@@ -27,13 +27,20 @@ app.use('/campaign', campaignRouter);
 app.use("/orders", orderRoutes)
 
 app.get('/', (req, res) => {
-  res.type('text').send(
-    'Välkommen till huvudsidan!\n' +
-    '/users – Användarsida\n' +
-    '/menu – Meny\n' +
-    '/order – Order\n' +
-    '/campaign – Kampanjer'
-  );
+  res.type('html').send(`
+    <h1>Välkommen till huvudsidan!</h1>
+    <button onclick="location.href='/users'">Användarsida</button>
+    <button onclick="location.href='/menu'">Meny</button>
+    <button onclick="location.href='/campaign'">Kampanjer</button>
+    <style>
+      button {
+        display: block;
+        margin: 10px 0;
+        padding: 10px 20px;
+        font-size: 16px;
+      }
+    </style>
+  `);
 });
 
 // Startar servern på angiven port 3000 
