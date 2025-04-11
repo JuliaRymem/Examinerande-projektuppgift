@@ -268,6 +268,17 @@ Nu kan du använda API:et via `http://localhost:3000/`
   "email": "nyemail@example.com"
 }
 ```
+### Skapa en ny användare
+
+**POST** /users
+
+```json
+{
+  "name": "",
+  "email": "mymail@mymail",
+  "password": ""
+}
+```
 
 ### Ta bort en användare
 
